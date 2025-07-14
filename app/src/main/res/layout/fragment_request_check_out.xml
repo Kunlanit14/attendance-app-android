@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tvReqCheckIn"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RequestCheckInFragment"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvRequestCheckOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="25dp"
+        android:text="Request Check-out"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="15dp"
+        tools:layout_editor_absoluteY="100dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvDateCheckOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_marginLeft="30dp"
+            android:text="Date : " />
+
+        <EditText
+            android:id="@+id/etDateCheckOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:ems="10"
+            android:inputType="date" />
+
+        <ImageView
+            android:id="@+id/imageViewCalendarCheckOut"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:src="@drawable/calendar" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvTimeCheckOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/black"
+            android:text="Time : " />
+
+        <EditText
+            android:id="@+id/etTimeCheckOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="hh:mm"
+            android:inputType="time" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSaveCheckOut"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_save_disable"
+            android:textColor="@color/white"
+            android:text="SAVE" />
+
+        <Button
+            android:id="@+id/btnCancelCheckOut"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:background="@drawable/button_cancel"
+            android:text="CANCEL" />
+    </LinearLayout>
+
+
+</LinearLayout>

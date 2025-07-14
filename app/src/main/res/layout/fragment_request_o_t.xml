@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".RequestOTFragment">
+
+
+    <TextView
+        android:id="@+id/tvRequestOT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="25dp"
+        android:text="Request OT"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvDateCheckIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="Date : "
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/etDateRequestOT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="date" />
+
+        <ImageView
+            android:id="@+id/imgViewCalendarOT"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:src="@drawable/calendar" />
+
+    </LinearLayout>
+
+
+    <CheckBox
+        android:id="@+id/checkBoxBreak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:text="ฺBreak 20 min"
+        android:textColor="@color/black" />
+
+    <LinearLayout
+        android:id="@+id/fromTimeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/tvFromTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="From time :"
+            android:textColor="@color/black" />
+
+        <FrameLayout
+            android:id="@+id/frameFromTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etFromTimeRequestOT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:ems="10"
+                android:hint="hh:mm"
+                android:inputType="time"
+                android:textAlignment="viewStart" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvToTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="To time :"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/etTimeRequestOT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="27dp"
+            android:ems="10"
+            android:hint="hh:mm"
+            android:inputType="time" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvReason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="Reason :"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/etReason"
+            android:layout_width="285dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/text_border"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSaveOT"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_save"
+            android:backgroundTint="@null"
+            android:text="SAVE"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnCancelOT"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/button_cancel"
+            android:backgroundTint="@null"
+            android:text="CANCEL"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+</LinearLayout>
+

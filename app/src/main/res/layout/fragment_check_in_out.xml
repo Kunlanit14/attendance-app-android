@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CheckInOutFragment">
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/checkInButton"
+            android:layout_width="230dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="120dp"
+            android:background="@drawable/button_shape"
+            android:focusable="true"
+            android:text="Check In"
+            android:textColor="@color/white"
+            android:textSize="34sp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:id="@+id/checkOutButton"
+            android:layout_width="230dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="120dp"
+            android:background="@drawable/button_red"
+            android:focusable="true"
+            android:text="Check Out"
+            android:textColor="@color/white"
+            android:textSize="34sp"
+            app:backgroundTint="@null" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvCheckIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Check in at xx:xx"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
+    <TextView
+        android:id="@+id/tvCheckOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Check out at xx:xx"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCheckIn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

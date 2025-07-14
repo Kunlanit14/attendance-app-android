@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">AttendanceApp</string>
+
+    <string-array name="RequestType">
+        <item></item>
+        <item>Request check-in</item>
+        <item>Request check-out</item>
+        <item>Request OT</item>
+        <item>Request leave</item>
+    </string-array>
+
+
+    <string-array name="LeaveType">
+        <item></item>
+        <item>Annual (P)</item>
+        <item>Private Leave (NP)</item>
+        <item>Sick (P)</item>
+        <item>Special Holiday (P)</item>
+        <item>Personal (P)</item>
+    </string-array>
+
+    <string-array name="Period">
+        <item></item>
+        <item>AM</item>
+        <item>PM</item>
+        <item>Full Day</item>
+    </string-array>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

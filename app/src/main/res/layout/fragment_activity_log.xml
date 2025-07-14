@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tbActivitiesLog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="5dp"
+    android:padding="16dp"
+    android:stretchColumns="*"
+    tools:context=".ActivityLogFragment">
+
+    <TableRow android:id="@+id/tbRow1">
+
+        <TextView
+            android:id="@+id/tvDateRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cell_shape"
+            android:padding="10dp"
+            android:singleLine="false"
+            android:text="Date request"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvRequestType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cell_shape"
+            android:padding="10dp"
+            android:text="Request type"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cell_shape"
+            android:padding="10dp"
+            android:text="Detail"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </TableRow>
+
+
+</TableLayout>
