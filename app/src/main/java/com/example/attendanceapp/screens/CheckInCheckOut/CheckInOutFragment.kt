@@ -1,24 +1,20 @@
-package com.example.attendanceapp
+package com.example.attendanceapp.screens.CheckInCheckOut
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.view.isVisible
-import androidx.transition.Visibility
+import androidx.fragment.app.Fragment
+import com.example.attendanceapp.R
 import com.example.attendanceapp.data.CheckInData
 import com.example.attendanceapp.data.CheckOutData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.joinAll
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.Date
 

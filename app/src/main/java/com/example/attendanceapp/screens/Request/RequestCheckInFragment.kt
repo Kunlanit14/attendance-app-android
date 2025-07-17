@@ -1,4 +1,4 @@
-package com.example.attendanceapp
+package com.example.attendanceapp.screens.Request
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -17,8 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import com.example.attendanceapp.R
 import com.example.attendanceapp.components.CalendarPicker
 import com.example.attendanceapp.data.RequestCheckInData
 import com.google.gson.Gson

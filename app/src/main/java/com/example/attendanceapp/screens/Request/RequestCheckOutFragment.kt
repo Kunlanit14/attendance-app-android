@@ -1,10 +1,7 @@
-package com.example.attendanceapp
+package com.example.attendanceapp.screens.Request
 
-import android.app.FragmentManager
-import android.app.FragmentTransaction
 import android.content.Context
 import android.content.SharedPreferences
-import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -20,8 +17,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.example.attendanceapp.R
 import com.example.attendanceapp.components.CalendarPicker
-import com.example.attendanceapp.data.RequestCheckInData
 import com.example.attendanceapp.data.RequestCheckOutData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

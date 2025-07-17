@@ -1,8 +1,6 @@
-package com.example.attendanceapp
+package com.example.attendanceapp.screens.Request
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.content.SharedPreferences
 import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,7 +14,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import java.time.format.TextStyle
+import com.example.attendanceapp.R
 
 class RequestFragment : Fragment() {
 

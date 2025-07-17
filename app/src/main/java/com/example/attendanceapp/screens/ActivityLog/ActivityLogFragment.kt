@@ -1,17 +1,17 @@
-package com.example.attendanceapp
+package com.example.attendanceapp.screens.ActivityLog
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.example.attendanceapp.R
 import com.example.attendanceapp.data.ActivitiesLogCommonItem
 import com.example.attendanceapp.data.CheckInData
 import com.example.attendanceapp.data.CheckOutData
@@ -21,7 +21,6 @@ import com.example.attendanceapp.data.RequestLeaveData
 import com.example.attendanceapp.data.RequestOTData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import org.w3c.dom.Text
 
 class ActivityLogFragment : Fragment() {
 
@@ -192,7 +191,7 @@ class ActivityLogFragment : Fragment() {
             } else {
                 row.setBackgroundColor(Color.parseColor("#E7E9F3"))
             }
-            
+
             val dateTextView = TextView(requireContext())
             dateTextView.text = logItem.dateRequest
             dateTextView.textSize = 11.5f

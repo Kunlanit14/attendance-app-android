@@ -1,14 +1,12 @@
-package com.example.attendanceapp
+package com.example.attendanceapp.screens.Request
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.icu.util.Calendar
-import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +18,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.Lifecycle
+import com.example.attendanceapp.R
 import com.example.attendanceapp.components.CalendarPicker
 import com.example.attendanceapp.data.RequestOTData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

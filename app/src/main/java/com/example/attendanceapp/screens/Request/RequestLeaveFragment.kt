@@ -1,17 +1,15 @@
-package com.example.attendanceapp
+package com.example.attendanceapp.screens.Request
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
-import android.text.Selection
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -22,9 +20,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isNotEmpty
+import com.example.attendanceapp.R
 import com.example.attendanceapp.components.CalendarPicker
 import com.example.attendanceapp.data.RequestLeaveData
-import com.example.attendanceapp.data.RequestOTData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
