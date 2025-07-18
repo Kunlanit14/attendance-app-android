@@ -1,9 +1,8 @@
-package com.example.attendanceapp.screens.Request
+package com.example.attendanceapp.screens.request
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.icu.util.Calendar
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,10 +16,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
+import androidx.core.content.edit
 import com.example.attendanceapp.R
+import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.components.CalendarPicker
-import com.example.attendanceapp.data.RequestOTData
+import com.example.attendanceapp.data.model.RequestOTData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
@@ -41,7 +42,6 @@ class RequestOTFragment : Fragment() {
 
     lateinit var sharedPreferences: SharedPreferences
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,7 +58,6 @@ class RequestOTFragment : Fragment() {
         etReason = view.findViewById(R.id.etReason)
         checkBoxBreak = view.findViewById(R.id.checkBoxBreak)
 
-        val REQUEST_OT_LIST = "request_ot_list"
 
         btnCalendarOT.setOnClickListener {
             CalendarPicker.showDatePicker(requireContext()) {
@@ -73,12 +72,12 @@ class RequestOTFragment : Fragment() {
             Toast.makeText(requireContext(), "Request OT was saved.", Toast.LENGTH_LONG).show()
 
             //Date
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy")
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             val currentDate : String = dateFormat.format(Date())
 
             sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
             val gson = Gson()
-            val json = sharedPreferences.getString(REQUEST_OT_LIST,null)
+            val json = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_OT_LIST.key,null)
             val type = object : TypeToken<MutableList<RequestOTData>>(){}.type
             val requestOTDataList : MutableList<RequestOTData> = if (json != null) {
                 gson.fromJson(json, type)
@@ -88,7 +87,7 @@ class RequestOTFragment : Fragment() {
 
             val newRequestOTData = RequestOTData(
                 currentDate = currentDate,
-                requestType = "Request-OT",
+                requestType = RequestTypeEnum.REQUEST_OT.type,
                 otDateRequest = currentDate,
                 fromTime = etFromTimeReqOT.text.toString(),
                 toTime = etToTimeReqOT.text.toString(),
@@ -96,10 +95,9 @@ class RequestOTFragment : Fragment() {
             )
             requestOTDataList.add(newRequestOTData)
 
-            val editor = sharedPreferences.edit()
-            editor.putString(REQUEST_OT_LIST,gson.toJson(requestOTDataList))
-            editor.apply()
-
+            sharedPreferences.edit {
+                putString(ActivityLogKeyEnum.REQUEST_OT_LIST.key,gson.toJson(requestOTDataList))
+            }
 
             // Clear data
             etDateRequestOT.text = ""
@@ -216,13 +214,15 @@ class RequestOTFragment : Fragment() {
         sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
         val checkInTime = sharedPreferences.getString("timeCheckIn","")
         val formatDate = SimpleDateFormat("HH:mm", Locale.getDefault())
-        val date = formatDate.parse(checkInTime)
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.HOUR, 9)
-        val fromTimeOff = formatDate.format(calendar.time)
-        etFromTimeReqOT.setText(fromTimeOff)
+        if (checkInTime != null){
+            val date = formatDate.parse(checkInTime)
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            calendar.add(Calendar.HOUR, 9)
+            val fromTimeOff = formatDate.format(calendar.time)
+            etFromTimeReqOT.setText(fromTimeOff)
 
+        }
         val checkOutTime = sharedPreferences.getString("timeCheckOut","")
         etToTimeReqOT.setText(checkOutTime)
     }

@@ -1,8 +1,7 @@
-package com.example.attendanceapp.screens.Request
+package com.example.attendanceapp.screens.request
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,15 +17,18 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.view.isNotEmpty
 import com.example.attendanceapp.R
 import com.example.attendanceapp.components.CalendarPicker
-import com.example.attendanceapp.data.RequestLeaveData
+import com.example.attendanceapp.data.model.RequestLeaveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import androidx.core.content.edit
+import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.RequestTypeEnum
 
 class RequestLeaveFragment : Fragment() {
 
@@ -41,7 +43,6 @@ class RequestLeaveFragment : Fragment() {
     lateinit var etLeaveReason : EditText
     lateinit var sharedPreferences : SharedPreferences
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +60,6 @@ class RequestLeaveFragment : Fragment() {
         btnLeaveCancel = view.findViewById(R.id.btnCancelLeave)
         etLeaveReason = view.findViewById(R.id.etReasonLeave)
 
-        val REQUEST_LEAVE_LIST = "request_leave_list"
 
         btnCalendarFromDate.setOnClickListener {
             CalendarPicker.showDatePicker(requireContext()) {
@@ -93,12 +93,6 @@ class RequestLeaveFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-//                val selectedItem = parent?.getItemAtPosition(position).toString()
-//                when (selectedItem){
-//                    "Annual (P)" -> {
-//
-//                    }
-//                }
                 updateButtonStateLeave()
 
             }
@@ -138,11 +132,15 @@ class RequestLeaveFragment : Fragment() {
             Toast.makeText(requireContext(), "Request Leave was saved.", Toast.LENGTH_LONG).show()
 
             //Date
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy")
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             val currentDate : String = dateFormat.format(Date())
+
+            val formattedFromDate = parsedDateFormat(etFromDate.text.toString())
+            val formattedToDate = parsedDateFormat(etToDate.text.toString())
+
             sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
             val gson = Gson()
-            val json = sharedPreferences.getString(REQUEST_LEAVE_LIST,null)
+            val json = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_LEAVE_LIST.key,null)
             val type = object : TypeToken<MutableList<RequestLeaveData>>(){}.type
             val requestLeaveDataList : MutableList<RequestLeaveData> = if (json != null) {
                 gson.fromJson(json, type)
@@ -152,26 +150,24 @@ class RequestLeaveFragment : Fragment() {
 
             val newRequestLeaveData = RequestLeaveData(
                 currentDate = currentDate,
-                requestType = "Request-Leave",
+                requestType = RequestTypeEnum.REQUEST_LEAVE.type,
                 leaveType = leaveTypeSpinner.selectedItem.toString(),
-                fromDate = etFromDate.text.toString(),
-                toDate = etToDate.text.toString(),
+                fromDate = formattedFromDate,
+                toDate = formattedToDate,
                 reasonLeave = etLeaveReason.text.toString(),
                 period = periodSpinner.selectedItem.toString()
             )
             requestLeaveDataList.add(newRequestLeaveData)
 
 
-
-
-            val editor = sharedPreferences.edit()
-            editor.putString(REQUEST_LEAVE_LIST,gson.toJson(requestLeaveDataList))
-            editor.putString("leaveType",leaveTypeSpinner.toString())
-            editor.putString("fromDateLeave",etFromDate.text.toString())
-            editor.putString("toDateLeave",etToDate.text.toString())
-            editor.putString("period",periodSpinner.toString())
-            editor.putString("reasonLeave",etLeaveReason.text.toString())
-            editor.apply()
+            sharedPreferences.edit {
+                putString(ActivityLogKeyEnum.REQUEST_LEAVE_LIST.key, gson.toJson(requestLeaveDataList))
+                putString("leaveType", leaveTypeSpinner.toString())
+                putString("fromDateLeave", etFromDate.text.toString())
+                putString("toDateLeave", etToDate.text.toString())
+                putString("period", periodSpinner.toString())
+                putString("reasonLeave", etLeaveReason.text.toString())
+            }
 
 
             leaveTypeSpinner.setSelection(0)
@@ -179,7 +175,6 @@ class RequestLeaveFragment : Fragment() {
             etFromDate.text = ""
             etToDate.text = ""
             etLeaveReason.text.clear()
-
 
         }
 
@@ -275,6 +270,16 @@ class RequestLeaveFragment : Fragment() {
         }else{
             btnLeaveSave.setBackgroundResource(R.drawable.button_save_disable)
         }
+    }
+
+    fun parsedDateFormat(dateString: String) : String {
+        val inputFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+
+        val date = inputFormat.parse(dateString)
+
+        return date?.let { outputFormat.format(it) }?: ""
+
     }
 
 

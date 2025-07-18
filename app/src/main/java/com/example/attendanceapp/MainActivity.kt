@@ -12,11 +12,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.attendanceapp.screens.ActivityLog.ActivityLogFragment
-import com.example.attendanceapp.screens.CheckInCheckOut.CheckInOutFragment
-import com.example.attendanceapp.screens.Request.RequestFragment
+import com.example.attendanceapp.screens.activityLog.ActivityLogFragment
+import com.example.attendanceapp.screens.checkIncheckOut.CheckInOutFragment
+import com.example.attendanceapp.screens.request.RequestFragment
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         menuButton = findViewById(R.id.menuButton)
 
         //get current date
-        val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy")
+        val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
         val currentDateAndTime : String = simpleDateFormat.format(Date())
 
         dateAndTime.text = currentDateAndTime

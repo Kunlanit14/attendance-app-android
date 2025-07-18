@@ -1,9 +1,8 @@
-package com.example.attendanceapp.screens.CheckInCheckOut
+package com.example.attendanceapp.screens.checkIncheckOut
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +10,17 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.attendanceapp.R
-import com.example.attendanceapp.data.CheckInData
-import com.example.attendanceapp.data.CheckOutData
+import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.ButtonEnum
+import com.example.attendanceapp.common.constant.RequestTypeEnum
+import com.example.attendanceapp.data.model.CheckInData
+import com.example.attendanceapp.data.model.CheckOutData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import androidx.core.content.edit
 
 class CheckInOutFragment : Fragment() {
 
@@ -32,9 +36,6 @@ class CheckInOutFragment : Fragment() {
 
     lateinit var sharedPreferences: SharedPreferences
 
-    //KEYS
-    val KEY_BUTTON_STATE = "button_state"
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,19 +48,16 @@ class CheckInOutFragment : Fragment() {
         checkIn = view.findViewById(R.id.tvCheckIn)
         checkOut = view.findViewById(R.id.tvCheckOut)
 
-
-        val CHECK_IN_LIST_KEY = "check_in_list"
-        val CHECK_OUT_LIST_KEY = "check_out_list"
         //Date
-        val dateFormat = SimpleDateFormat("MMM dd, yyyy")
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
         val currentDate : String = dateFormat.format(Date())
 
         checkOutButton.visibility = View.GONE
         checkInButton.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("HH:mm")
+            val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             val currentTime : String = simpleDateFormat.format(Date().time)
 
-            checkIn.text = "Check in at $currentTime"
+            checkIn.text = getString(R.string.check_in_at,currentTime)
             checkInButton.visibility = View.GONE
             checkOutButton.visibility = View.VISIBLE
             saveButtonState("out")
@@ -68,7 +66,7 @@ class CheckInOutFragment : Fragment() {
 
             //List for store many data in Tablelayout
             val gson = Gson()
-            val json = sharedPreferences.getString(CHECK_IN_LIST_KEY,null)
+            val json = sharedPreferences.getString(ActivityLogKeyEnum.CHECK_IN_LIST.key,null)
             val type = object : TypeToken<MutableList<CheckInData>>(){}.type
             val checkInDataList : MutableList<CheckInData> = if (json != null) {
                 gson.fromJson(json,type)
@@ -79,22 +77,22 @@ class CheckInOutFragment : Fragment() {
             val newData = CheckInData(
                 checkInTime = currentTime,
                 dateCheckIn = currentDate,
-                requestType = "Check-in"
+                requestType = RequestTypeEnum.CHECK_IN.type
             )
             checkInDataList.add(newData)
 
-            val editor = sharedPreferences.edit()
-            editor.putString("timeCheckIn",currentTime)
-            editor.putString(CHECK_IN_LIST_KEY,gson.toJson(checkInDataList))
-            editor.apply()
+            sharedPreferences.edit {
+                putString("timeCheckIn", currentTime)
+                putString(ActivityLogKeyEnum.CHECK_IN_LIST.key, gson.toJson(checkInDataList))
+            }
 
         }
 
         checkOutButton.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("HH:mm")
+            val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             val currentTimeCheckOut : String = simpleDateFormat.format(Date().time)
 
-            checkOut.text = "Check out at $currentTimeCheckOut"
+            checkOut.text = getString(R.string.check_out_at,currentTimeCheckOut)
             checkOutButton.visibility = View.GONE
             checkInButton.visibility = View.VISIBLE
             saveButtonState("in")
@@ -103,7 +101,7 @@ class CheckInOutFragment : Fragment() {
             //
 
             val gson = Gson()
-            val jsonCheckOut = sharedPreferences.getString(CHECK_OUT_LIST_KEY,null)
+            val jsonCheckOut = sharedPreferences.getString(ActivityLogKeyEnum.CHECK_OUT_LIST.key,null)
             val typeCheckOut = object : TypeToken<MutableList<CheckOutData>>(){}.type
             val checkOutdataList : MutableList<CheckOutData> = if (jsonCheckOut != null){
                 gson.fromJson(jsonCheckOut, typeCheckOut)
@@ -114,19 +112,17 @@ class CheckInOutFragment : Fragment() {
             val newCheckOutData = CheckOutData(
                 checkOutTime = currentTimeCheckOut,
                 dateCheckOut = currentDate,
-                requestType = "Check-out"
+                requestType = RequestTypeEnum.CHECK_OUT.type
             )
 
             checkOutdataList.add(newCheckOutData)
 
 
-            val editor = sharedPreferences.edit()
-            editor.putString("timeCheckOut",currentTimeCheckOut)
-            editor.putString(CHECK_OUT_LIST_KEY,gson.toJson(checkOutdataList))
-            editor.apply()
+            sharedPreferences.edit {
+                putString("timeCheckOut", currentTimeCheckOut)
+                putString(ActivityLogKeyEnum.CHECK_OUT_LIST.key, gson.toJson(checkOutdataList))
+            }
         }
-
-
 
         return view
 
@@ -157,11 +153,11 @@ class CheckInOutFragment : Fragment() {
 
 
         if(!receiveTimeCheckIn.isNullOrEmpty()) {
-            checkIn.text = "Check in at $receiveTimeCheckIn"
+            checkIn.text = getString(R.string.check_in_at,receiveTimeCheckIn)
         }
 
         if(!receiveTimeCheckOut.isNullOrEmpty()) {
-            checkOut.text = "Check out at $receiveTimeCheckOut"
+            checkOut.text = getString(R.string.check_out_at,receiveTimeCheckOut)
         }
 
     }
@@ -173,41 +169,35 @@ class CheckInOutFragment : Fragment() {
         time = checkIn.text.toString()
         timeCheckOut = checkOut.text.toString()
 
-
-
-        Log.d("SharePrefTime", "Time receive: $time")
-        Log.d("SharePrefTimeCheckOut", "Time receive: $timeCheckOut")
-        val editor = sharedPreferences.edit()
-
-        editor.putString("key time",time)
-        editor.putString("key timeCheckOut",timeCheckOut)
-        editor.apply()
+        sharedPreferences.edit {
+            putString("key time", time)
+            putString("key timeCheckOut", timeCheckOut)
+        }
 
     }
 
     fun retreiveData(){
         sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
 
-        time = sharedPreferences.getString("key time","Check in at xx:xx")
-        timeCheckOut = sharedPreferences.getString("key timeCheckOut","Check out at xx:xx")
+        time = sharedPreferences.getString("key time",getString(R.string.check_in_at_text))
+        timeCheckOut = sharedPreferences.getString("key timeCheckOut",getString(R.string.check_out_at_text))
 
-        checkIn.setText(time)
-        checkOut.setText(timeCheckOut)
+        checkIn.text = time
+        checkOut.text = timeCheckOut
 
     }
 
     fun saveButtonState(state: String){
         sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-
-        editor.putString(KEY_BUTTON_STATE,state)
-        editor.apply()
+        sharedPreferences.edit {
+            putString(ButtonEnum.BUTTON_STATE.state, state)
+        }
 
     }
 
 
     fun loadSaveButtonState() : String {
         sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
-        return sharedPreferences.getString(KEY_BUTTON_STATE,"in") ?: "in"
+        return sharedPreferences.getString(ButtonEnum.BUTTON_STATE.state,"in") ?: "in"
     }
 }

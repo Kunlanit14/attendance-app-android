@@ -1,7 +1,6 @@
-package com.example.attendanceapp.screens.Request
+package com.example.attendanceapp.screens.request
 
 import android.annotation.SuppressLint
-import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
@@ -20,8 +18,6 @@ class RequestFragment : Fragment() {
 
     lateinit var spinner : Spinner
     lateinit var tvRequestType : TextView
-    lateinit var saveButton : Button
-    lateinit var calendar: Calendar
 
 
 
@@ -43,19 +39,7 @@ class RequestFragment : Fragment() {
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-
         spinner.adapter = arrayAdapter
-
-//        val budle = Bundle()
-//
-//        val requestCheckInFragment = RequestCheckInFragment()
-//        requestCheckInFragment.arguments = budle
-//
-//        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-//        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-//        fragmentTransaction.replace(R.id.requestFrame, requestCheckInFragment)
-//        fragmentTransaction.commit()
-
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -64,10 +48,6 @@ class RequestFragment : Fragment() {
                 id: Long
             ) {
                 val selectItem = parent?.getItemAtPosition(position).toString()
-
-                if (position==0){
-                    val option = ""
-                }
 
                 when (selectItem){
                     "Request check-in" -> {

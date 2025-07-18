@@ -5,7 +5,7 @@
     android:id="@+id/tvReqCheckIn"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.Request.RequestCheckInFragment"
+    tools:context=".screens.request.RequestCheckInFragment"
     android:orientation="vertical">
 
     <TextView

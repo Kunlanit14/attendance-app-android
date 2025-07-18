@@ -1,12 +1,10 @@
-package com.example.attendanceapp.screens.Request
+package com.example.attendanceapp.screens.request
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +14,18 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.example.attendanceapp.R
+import com.example.attendanceapp.common.constant.ButtonEnum
 import com.example.attendanceapp.components.CalendarPicker
-import com.example.attendanceapp.data.RequestCheckInData
+import com.example.attendanceapp.data.model.RequestCheckInData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.Date
+import androidx.core.content.edit
+import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.RequestTypeEnum
+import java.util.Locale
 
 open class RequestCheckInFragment : Fragment() {
 
@@ -34,11 +36,9 @@ open class RequestCheckInFragment : Fragment() {
     lateinit var cancelButton : Button
 
     var requestTime: String? = null
-    val KEY_BUTTON_STATE = "button_state"
 
     lateinit var sharedPreferences : SharedPreferences
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,8 +52,6 @@ open class RequestCheckInFragment : Fragment() {
         etDateRequestcheck = view.findViewById(R.id.etDateCheckIn)
         etTimeRequestCheckIn = view.findViewById(R.id.etTimeCheckIn)
         cancelButton = view.findViewById(R.id.btnCancel)
-
-        val REQUEST_CHECKIN_LIST = "request_checkin_list"
 
 
         btnCalendar.setOnClickListener {
@@ -117,12 +115,12 @@ open class RequestCheckInFragment : Fragment() {
             Toast.makeText(requireContext(), "Request Check-in was saved.", Toast.LENGTH_LONG).show()
 
             //Date
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy")
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             val currentDate : String = dateFormat.format(Date())
 
             sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
             val gson = Gson()
-            val json = sharedPreferences.getString(REQUEST_CHECKIN_LIST,null)
+            val json = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_CHECKIN_LIST.key,null)
             val type = object : TypeToken<MutableList<RequestCheckInData>>(){}.type
             val requestCheckInList : MutableList<RequestCheckInData> = if (json != null){
                 gson.fromJson(json, type)
@@ -132,18 +130,18 @@ open class RequestCheckInFragment : Fragment() {
 
             val newRequestCheckInData = RequestCheckInData(
                 dateReqCheckIn = currentDate,
-                requestType = "Request Check-in",
+                requestType = RequestTypeEnum.REQUEST_CHECK_IN.type,
                 requestCheckInTime = timeRequest
             )
 
             requestCheckInList.add(newRequestCheckInData)
 
-            val editor = sharedPreferences.edit()
-            editor.putString(KEY_BUTTON_STATE,"out")
-            editor.putString(REQUEST_CHECKIN_LIST,gson.toJson(requestCheckInList))
-            editor.putString("dateRequestCheckIn",etDateRequestcheck.text.toString())
-            editor.putString("timeCheckIn",timeRequest)
-            editor.apply()
+            sharedPreferences.edit {
+                putString(ButtonEnum.BUTTON_STATE.state, "out")
+                putString(ActivityLogKeyEnum.REQUEST_CHECKIN_LIST.key, gson.toJson(requestCheckInList))
+                putString("dateRequestCheckIn", etDateRequestcheck.text.toString())
+                putString("timeCheckIn", timeRequest)
+            }
 
             etDateRequestcheck.text = ""
             etTimeRequestCheckIn.text.clear()
@@ -171,12 +169,9 @@ open class RequestCheckInFragment : Fragment() {
 
         requestTime = etTimeRequestCheckIn.text.toString()
 
-        Log.d("SharePrefTime", "Time receive: $requestTime")
-
-        val editor = sharedPreferences.edit()
-
-        editor.putString("timeRequest",requestTime)
-        editor.apply()
+        sharedPreferences.edit {
+            putString("timeRequest", requestTime)
+        }
 
     }
 

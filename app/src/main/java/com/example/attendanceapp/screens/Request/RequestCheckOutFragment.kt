@@ -1,8 +1,7 @@
-package com.example.attendanceapp.screens.Request
+package com.example.attendanceapp.screens.request
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,14 +15,18 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.example.attendanceapp.R
+import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.ButtonEnum
 import com.example.attendanceapp.components.CalendarPicker
-import com.example.attendanceapp.data.RequestCheckOutData
+import com.example.attendanceapp.data.model.RequestCheckOutData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import androidx.core.content.edit
+import com.example.attendanceapp.common.constant.RequestTypeEnum
 
 class RequestCheckOutFragment : Fragment() {
 
@@ -34,12 +37,9 @@ class RequestCheckOutFragment : Fragment() {
     lateinit var cancelButtonReqCheckOut : Button
 
     var requestTimeCheckOut : String? = null
-    val KEY_BUTTON_STATE = "button_state"
 
     lateinit var sharedPreferences: SharedPreferences
 
-
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,8 +54,6 @@ class RequestCheckOutFragment : Fragment() {
         etTimeReqCheckout = view.findViewById(R.id.etTimeCheckOut)
         saveButtonReqCheckOut = view.findViewById(R.id.btnSaveCheckOut)
         cancelButtonReqCheckOut = view.findViewById(R.id.btnCancelCheckOut)
-
-        val REQUEST_CHECKOUT_LIST = "request_checkout_list"
 
 
         btnCalendar.setOnClickListener {
@@ -118,13 +116,13 @@ class RequestCheckOutFragment : Fragment() {
 
             Toast.makeText(requireContext(), "Request Check-out was saved.", Toast.LENGTH_LONG).show()
 //Date
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy")
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             val currentDate : String = dateFormat.format(Date())
 
             sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
 
             val gson = Gson()
-            val json = sharedPreferences.getString(REQUEST_CHECKOUT_LIST,null)
+            val json = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_CHECKOUT_LIST.key,null)
             val type = object : TypeToken<MutableList<RequestCheckOutData>>(){}.type
             val requestCheckOutList : MutableList<RequestCheckOutData> = if (json != null){
                 gson.fromJson(json, type)
@@ -134,18 +132,21 @@ class RequestCheckOutFragment : Fragment() {
 
             val newRequestCheckOutData = RequestCheckOutData(
                 dateReqCheckOut = currentDate,
-                requestType = "Request Check-out",
+                requestType = RequestTypeEnum.REQUEST_CHECK_OUT.type,
                 requestCheckOutTime = timeReqCheckOut
             )
 
             requestCheckOutList.add(newRequestCheckOutData)
 
-            val editor = sharedPreferences.edit()
-            editor.putString(KEY_BUTTON_STATE,"in")
-            editor.putString(REQUEST_CHECKOUT_LIST,gson.toJson(requestCheckOutList))
-            editor.putString("dateRequestCheckOut",etDateReqCheckOut.text.toString())
-            editor.putString("timeCheckOut",timeReqCheckOut)
-            editor.apply()
+            sharedPreferences.edit {
+                putString(ButtonEnum.BUTTON_STATE.state, "in")
+                putString(
+                    ActivityLogKeyEnum.REQUEST_CHECKOUT_LIST.key,
+                    gson.toJson(requestCheckOutList)
+                )
+                putString("dateRequestCheckOut", etDateReqCheckOut.text.toString())
+                putString("timeCheckOut", timeReqCheckOut)
+            }
 
             etDateReqCheckOut.text = ""
             etTimeReqCheckout.text.clear()
@@ -194,9 +195,9 @@ class RequestCheckOutFragment : Fragment() {
 
         requestTimeCheckOut = etTimeReqCheckout.text.toString()
 
-        val editor = sharedPreferences.edit()
-        editor.putString("timeReqCheckOut",requestTimeCheckOut)
-        editor.apply()
+        sharedPreferences.edit {
+            putString("timeReqCheckOut", requestTimeCheckOut)
+        }
 
     }
 

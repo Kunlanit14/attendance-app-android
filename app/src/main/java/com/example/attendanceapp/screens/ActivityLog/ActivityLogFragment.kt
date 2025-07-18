@@ -1,4 +1,4 @@
-package com.example.attendanceapp.screens.ActivityLog
+package com.example.attendanceapp.screens.activityLog
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -14,13 +14,13 @@ import androidx.fragment.app.Fragment
 import com.example.attendanceapp.R
 import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
 import com.example.attendanceapp.common.constant.RequestTypeEnum
-import com.example.attendanceapp.data.ActivitiesLogCommonItem
-import com.example.attendanceapp.data.CheckInData
-import com.example.attendanceapp.data.CheckOutData
-import com.example.attendanceapp.data.RequestCheckInData
-import com.example.attendanceapp.data.RequestCheckOutData
-import com.example.attendanceapp.data.RequestLeaveData
-import com.example.attendanceapp.data.RequestOTData
+import com.example.attendanceapp.data.model.ActivitiesLogCommonItem
+import com.example.attendanceapp.data.model.CheckInData
+import com.example.attendanceapp.data.model.CheckOutData
+import com.example.attendanceapp.data.model.RequestCheckInData
+import com.example.attendanceapp.data.model.RequestCheckOutData
+import com.example.attendanceapp.data.model.RequestLeaveData
+import com.example.attendanceapp.data.model.RequestOTData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import androidx.core.graphics.toColorInt
