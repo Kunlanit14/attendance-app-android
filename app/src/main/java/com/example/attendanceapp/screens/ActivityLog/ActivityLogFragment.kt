@@ -12,6 +12,8 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.attendanceapp.R
+import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.data.ActivitiesLogCommonItem
 import com.example.attendanceapp.data.CheckInData
 import com.example.attendanceapp.data.CheckOutData
@@ -21,18 +23,12 @@ import com.example.attendanceapp.data.RequestLeaveData
 import com.example.attendanceapp.data.RequestOTData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import androidx.core.graphics.toColorInt
 
 class ActivityLogFragment : Fragment() {
 
     lateinit var tableActivities : TableLayout
     lateinit var sharedPreferences: SharedPreferences
-
-    val CHECK_IN_LIST_KEY = "check_in_list"
-    val CHECK_OUT_LIST_KEY = "check_out_list"
-    val REQUEST_OT_LIST = "request_ot_list"
-    val REQUEST_CHECKIN_LIST = "request_checkin_list"
-    val REQUEST_CHECKOUT_LIST = "request_checkout_list"
-    val REQUEST_LEAVE_LIST = "request_leave_list"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +54,7 @@ class ActivityLogFragment : Fragment() {
 
 
         sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
-        val json = sharedPreferences.getString(CHECK_IN_LIST_KEY,null)
+        val json = sharedPreferences.getString(ActivityLogKeyEnum.CHECK_IN_LIST.key,null)
         val type = object : TypeToken<List<CheckInData>>(){}.type
         val checkInList : List<CheckInData> = if (json != null) {
             Gson().fromJson(json, type)
@@ -70,14 +66,14 @@ class ActivityLogFragment : Fragment() {
         val checkInItem = checkInList.map {
             ActivitiesLogCommonItem(
                 dateRequest = it.dateCheckIn,
-                requestType = "Check-in",
+                requestType = RequestTypeEnum.CHECK_IN.type,
                 details = "Check-in : ${it.checkInTime}"
             )
         }
 
         //Check-out
         sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
-        val jsonCheckOut = sharedPreferences.getString(CHECK_OUT_LIST_KEY,null)
+        val jsonCheckOut = sharedPreferences.getString(ActivityLogKeyEnum.CHECK_OUT_LIST.key,null)
         val typeCheckOut = object : TypeToken<List<CheckOutData>>(){}.type
         val checkOutList : List<CheckOutData> = if (jsonCheckOut != null) {
             Gson().fromJson(jsonCheckOut, typeCheckOut)
@@ -88,14 +84,14 @@ class ActivityLogFragment : Fragment() {
         val checkOutItem = checkOutList.map {
             ActivitiesLogCommonItem(
                 dateRequest = it.dateCheckOut,
-                requestType = "Check-out",
+                requestType = RequestTypeEnum.CHECK_OUT.type,
                 details = "Check-out : ${it.checkOutTime}"
             )
         }
 
         //Request Check-in
         sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
-        val jsonReqCheckIn = sharedPreferences.getString(REQUEST_CHECKIN_LIST,null)
+        val jsonReqCheckIn = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_CHECKIN_LIST.key,null)
         val typeReqCheckIn = object : TypeToken<List<RequestCheckInData>>(){}.type
         val requestCheckInList : List<RequestCheckInData> = if (jsonReqCheckIn != null){
             Gson().fromJson(jsonReqCheckIn, typeReqCheckIn)
@@ -106,14 +102,14 @@ class ActivityLogFragment : Fragment() {
         val requestCheckInItem = requestCheckInList.map {
             ActivitiesLogCommonItem(
                 dateRequest = it.dateReqCheckIn,
-                requestType = "Request Check-in",
+                requestType = RequestTypeEnum.REQUEST_CHECK_IN.type,
                 details = "Request Check-in Date :\n${it.dateReqCheckIn}\nTime : ${it.requestCheckInTime}"
             )
         }
 
         //Request Check-out
         sharedPreferences = requireActivity().getSharedPreferences("saveData", Context.MODE_PRIVATE)
-        val jsonReqCheckOut = sharedPreferences.getString(REQUEST_CHECKOUT_LIST,null)
+        val jsonReqCheckOut = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_CHECKOUT_LIST.key,null)
         val typeReqCheckOut = object : TypeToken<List<RequestCheckOutData>>(){}.type
         val requestCheckOutList : List<RequestCheckOutData> = if (jsonReqCheckOut != null){
             Gson().fromJson(jsonReqCheckOut, typeReqCheckOut)
@@ -124,14 +120,14 @@ class ActivityLogFragment : Fragment() {
         val requestCheckOutItem = requestCheckOutList.map {
             ActivitiesLogCommonItem(
                 dateRequest = it.dateReqCheckOut,
-                requestType = "Request Check-out",
+                requestType = RequestTypeEnum.REQUEST_CHECK_OUT.type,
                 details = "Request Check-out Date :\n${it.dateReqCheckOut}\nTime : ${it.requestCheckOutTime}"
             )
         }
 
 
         //Request OT
-        val jsonOT = sharedPreferences.getString(REQUEST_OT_LIST,null)
+        val jsonOT = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_OT_LIST.key,null)
         val typeOT = object : TypeToken<List<RequestOTData>>(){}.type
         val requestOTList : List<RequestOTData> = if (jsonOT != null) {
             Gson().fromJson(jsonOT, typeOT)
@@ -142,14 +138,14 @@ class ActivityLogFragment : Fragment() {
         val requestCheckOTItem = requestOTList.map {
             ActivitiesLogCommonItem(
                 dateRequest = it.otDateRequest,
-                requestType = "Request OT",
+                requestType = RequestTypeEnum.REQUEST_OT.type,
                 details = "OT Date : ${it.otDateRequest}\nFrom Time : ${it.fromTime}\nTo Time : ${it.toTime}\nReason : ${it.reasonOT}"
             )
         }
 
 
         //Request Leave
-        val jsonLeave = sharedPreferences.getString(REQUEST_LEAVE_LIST,null)
+        val jsonLeave = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_LEAVE_LIST.key,null)
         val typeLeave = object : TypeToken<List<RequestLeaveData>>(){}.type
         val requestLeaveList : List<RequestLeaveData> = if (jsonLeave != null) {
             Gson().fromJson(jsonLeave, typeLeave)
@@ -160,7 +156,7 @@ class ActivityLogFragment : Fragment() {
         val requestCheckLeaveItem = requestLeaveList.map {
             ActivitiesLogCommonItem(
                 dateRequest = it.currentDate,
-                requestType = "Request Leave",
+                requestType = RequestTypeEnum.REQUEST_LEAVE.type,
                 details = "Leave Type : ${it.leaveType}\nFrom Date : ${it.fromDate}\nTo Date : ${it.toDate}\nPeriod : ${it.period}\nReason : ${it.reasonLeave}"
             )
         }
@@ -168,12 +164,12 @@ class ActivityLogFragment : Fragment() {
         val allLogItems = (checkInItem + checkOutItem + requestCheckInItem + requestCheckOutItem + requestCheckOTItem + requestCheckLeaveItem)
             .sortedWith(compareBy({it.dateRequest}, {
                 when (it.requestType) {
-                    "Check-in" -> 1
-                    "Request Check-in" -> 2
-                    "Check-out" -> 3
-                    "Request Check-out" -> 4
-                    "Request OT" -> 5
-                    "Request Leave" -> 6
+                    RequestTypeEnum.CHECK_IN.type -> 1
+                    RequestTypeEnum.REQUEST_CHECK_IN.type -> 2
+                    RequestTypeEnum.CHECK_OUT.type -> 3
+                    RequestTypeEnum.REQUEST_CHECK_OUT.type -> 4
+                    RequestTypeEnum.REQUEST_OT.type -> 5
+                    RequestTypeEnum.REQUEST_LEAVE.type -> 6
                     else -> ""
                 }
             }))
@@ -187,9 +183,9 @@ class ActivityLogFragment : Fragment() {
             val row = TableRow(requireContext())
 
             if (index % 2 == 0){
-                row.setBackgroundColor(Color.parseColor("#CDD3E8"))
+                row.setBackgroundColor("#CDD3E8".toColorInt())
             } else {
-                row.setBackgroundColor(Color.parseColor("#E7E9F3"))
+                row.setBackgroundColor("#E7E9F3".toColorInt())
             }
 
             val dateTextView = TextView(requireContext())

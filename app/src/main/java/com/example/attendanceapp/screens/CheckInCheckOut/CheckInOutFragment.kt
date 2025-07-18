@@ -35,7 +35,6 @@ class CheckInOutFragment : Fragment() {
     //KEYS
     val KEY_BUTTON_STATE = "button_state"
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
