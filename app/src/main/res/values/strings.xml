@@ -2,7 +2,7 @@
     <string name="app_name">AttendanceApp</string>
 
     <string-array name="RequestType">
-        <item></item>
+        <item />
         <item>Request check-in</item>
         <item>Request check-out</item>
         <item>Request OT</item>
@@ -11,7 +11,7 @@
 
 
     <string-array name="LeaveType">
-        <item></item>
+        <item />
         <item>Annual (P)</item>
         <item>Private Leave (NP)</item>
         <item>Sick (P)</item>
@@ -20,7 +20,7 @@
     </string-array>
 
     <string-array name="Period">
-        <item></item>
+        <item/>
         <item>AM</item>
         <item>PM</item>
         <item>Full Day</item>
@@ -29,4 +29,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="check_in_at">Check in at %1$s</string>
+    <string name="check_out_at">Check out at %1$s</string>
+    <string name="check_in_at_text">Check in at xx:xx</string>
+    <string name="check_out_at_text">Check out at xx:xx</string>
+    <string name="check_in">Check-in : %1$s</string>
+    <string name="check_out">Check-out : %1$s</string>
+    <string name="request_check_in_date">Request Check-in Date :\n%1$s\nTime : %2$s&#10;</string>
+    <string name="request_check_out_date">Request Check-out Date : %1$s\n %2$s\n</string>
+
+
 </resources>
