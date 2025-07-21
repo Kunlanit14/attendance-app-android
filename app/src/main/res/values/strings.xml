@@ -41,6 +41,19 @@
     <string name="request_ot_date">OT Date : %1$s\nFrom Time : %2$s\nTo Time : %3$s\nReason : %4$s</string>
     <string name="request_leave_type">Leave Type : %1$s\nFrom Date : %2$s\nTo Date : %3$s\nPeriod : %4$s\nReason : %5$s</string>
 
+    <!-- Request Check-in -->
+    <string name="request_checkin_toast">Request Check-in was saved.</string>
+    <!-- Request Check-out -->
+    <string name="request_checkout_toast">Request Check-out was saved.</string>
+    <!-- Request OT -->
+    <string name="request_ot_toast">Request OT was saved.</string>
+    <!-- Request Leave -->
+    <string name="request_leave_toast">Request Leave was saved.</string>
 
 
+    <!-- Request Fragment type -->
+    <string name="request_checkin">Request check-in</string>
+    <string name="request_checkout">Request check-out</string>
+    <string name="request_ot">Request OT</string>
+    <string name="request_leave">Request leave</string>
 </resources>

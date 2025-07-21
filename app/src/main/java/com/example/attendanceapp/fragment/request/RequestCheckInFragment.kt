@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import androidx.core.content.edit
 import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
 import java.util.Locale
@@ -113,10 +114,10 @@ open class RequestCheckInFragment : Fragment() {
         saveButton.setOnClickListener {
             val timeRequest = etTimeRequestCheckIn.text.toString()
 
-            Toast.makeText(requireContext(), "Request Check-in was saved.", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), getString(R.string.request_checkin_toast), Toast.LENGTH_LONG).show()
 
             //Date
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
             val currentDate : String = dateFormat.format(Date())
 
             sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
@@ -138,10 +139,10 @@ open class RequestCheckInFragment : Fragment() {
             requestCheckInList.add(newRequestCheckInData)
 
             sharedPreferences.edit {
-                putString(ButtonEnum.BUTTON_STATE.state, "out")
+                putString(ButtonEnum.BUTTON_STATE.state, ButtonEnum.BUTTON_STATE_OUT.state)
                 putString(ActivityLogKeyEnum.REQUEST_CHECKIN_LIST.key, gson.toJson(requestCheckInList))
-                putString("dateRequestCheckIn", etDateRequestcheck.text.toString())
-                putString("timeCheckIn", timeRequest)
+                putString(SharePrefKeys.DATE_REQUEST_CHECKIN.data, etDateRequestcheck.text.toString())
+                putString(SharePrefKeys.TIME_CHECKIN.data, timeRequest)
             }
 
             etDateRequestcheck.text = ""
@@ -171,7 +172,7 @@ open class RequestCheckInFragment : Fragment() {
         requestTime = etTimeRequestCheckIn.text.toString()
 
         sharedPreferences.edit {
-            putString("timeRequest", requestTime)
+            putString(SharePrefKeys.SAVE_TIME.data, requestTime)
         }
 
     }

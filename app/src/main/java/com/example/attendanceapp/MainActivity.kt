@@ -12,8 +12,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.fragment.activityLog.ActivityLogFragment
-import com.example.attendanceapp.fragment.checkIncheckOut.CheckInOutFragment
+import com.example.attendanceapp.fragment.home.CheckInOutFragment
 import com.example.attendanceapp.fragment.request.RequestFragment
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -25,8 +26,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var dateAndTime : TextView
     lateinit var menuButton : ImageView
 
-
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(SystemBarStyle.Companion.dark(1))
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         menuButton = findViewById(R.id.menuButton)
 
         //get current date
-        val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        val simpleDateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
         val currentDateAndTime : String = simpleDateFormat.format(Date())
 
         dateAndTime.text = currentDateAndTime

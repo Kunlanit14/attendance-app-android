@@ -1,6 +1,5 @@
 package com.example.attendanceapp.fragment.request
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.attendanceapp.R
+import com.example.attendanceapp.common.constant.RequestTypeEnum
 
 class RequestFragment : Fragment() {
 
@@ -20,8 +20,6 @@ class RequestFragment : Fragment() {
     lateinit var tvRequestType : TextView
 
 
-
-    @SuppressLint("NewApi")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,7 +48,7 @@ class RequestFragment : Fragment() {
                 val selectItem = parent?.getItemAtPosition(position).toString()
 
                 when (selectItem){
-                    "Request check-in" -> {
+                    RequestTypeEnum.SPN_REQUEST_CHECKIN.type -> {
                         val budle = Bundle()
 
                         val requestCheckInFragment = RequestCheckInFragment()
@@ -62,7 +60,7 @@ class RequestFragment : Fragment() {
                         fragmentTransaction.commit()
 
                     }
-                    "Request check-out" -> { val budle = Bundle()
+                    RequestTypeEnum.SPN_REQUEST_CHECKOUT.type -> { val budle = Bundle()
 
                         val requestCheckOutFragment = RequestCheckOutFragment()
                         requestCheckOutFragment.arguments = budle
@@ -73,7 +71,7 @@ class RequestFragment : Fragment() {
                         fragmentTransaction.commit()
 
                     }
-                    "Request OT" -> { val budle = Bundle()
+                    RequestTypeEnum.SPN_REQUEST_OT.type -> { val budle = Bundle()
 
                         val requestOTFragment = RequestOTFragment()
                         requestOTFragment.arguments = budle
@@ -84,7 +82,7 @@ class RequestFragment : Fragment() {
                         fragmentTransaction.commit()
 
                     }
-                    "Request leave" -> { val budle = Bundle()
+                    RequestTypeEnum.SPN_REQUEST_LEAVE.type -> { val budle = Bundle()
 
                         val requestLeaveFragment = RequestLeaveFragment()
                         requestLeaveFragment.arguments = budle
