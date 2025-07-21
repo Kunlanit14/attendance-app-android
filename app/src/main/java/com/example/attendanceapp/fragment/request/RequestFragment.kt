@@ -29,6 +29,11 @@ class RequestFragment : Fragment() {
         spinner = view.findViewById(R.id.spinnerRequestType)
         tvRequestType = view.findViewById(R.id.tvRequest)
 
+        spinnerAdapter()
+        return view
+    }
+
+    fun spinnerAdapter(){
         var arrayAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.RequestType,
@@ -36,8 +41,12 @@ class RequestFragment : Fragment() {
         )
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
         spinner.adapter = arrayAdapter
+
+        spinnerItemSelected()
+    }
+
+    fun spinnerItemSelected(){
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -97,13 +106,9 @@ class RequestFragment : Fragment() {
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
 
         }
-
-        // Inflate the layout for this fragment
-        return view
     }
 
 
