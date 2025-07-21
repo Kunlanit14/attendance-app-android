@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.core.content.edit
 import com.example.attendanceapp.R
 import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
 import com.example.attendanceapp.components.CalendarPicker
@@ -70,10 +71,10 @@ class RequestOTFragment : Fragment() {
 
         btnSaveOT.isEnabled = false
         btnSaveOT.setOnClickListener {
-            Toast.makeText(requireContext(), "Request OT was saved.", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), getString(R.string.request_ot_toast), Toast.LENGTH_LONG).show()
 
             //Date
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
             val currentDate : String = dateFormat.format(Date())
 
             sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
@@ -213,8 +214,8 @@ class RequestOTFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-        val checkInTime = sharedPreferences.getString("timeCheckIn","")
-        val formatDate = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val checkInTime = sharedPreferences.getString(SharePrefKeys.TIME_CHECKIN.data,"")
+        val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         if (checkInTime != null){
             val date = formatDate.parse(checkInTime)
             val calendar = Calendar.getInstance()
@@ -224,7 +225,7 @@ class RequestOTFragment : Fragment() {
             etFromTimeReqOT.setText(fromTimeOff)
 
         }
-        val checkOutTime = sharedPreferences.getString("timeCheckOut","")
+        val checkOutTime = sharedPreferences.getString(SharePrefKeys.TIME_CHECKOUT.data,"")
         etToTimeReqOT.setText(checkOutTime)
     }
 
@@ -255,7 +256,7 @@ class RequestOTFragment : Fragment() {
 
     fun checkedBreakFromTimeProcess(){
         val fromTimeInput = etFromTimeReqOT.text.toString()
-        val formatDate = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         val date = formatDate.parse(fromTimeInput)
         val calendar = Calendar.getInstance()
         calendar.time = date
@@ -266,7 +267,7 @@ class RequestOTFragment : Fragment() {
 
     fun uncheckedBreakFromTimeProcess(){
         val fromTimeInput = etFromTimeReqOT.text.toString()
-        val formatDate = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         val date = formatDate.parse(fromTimeInput)
         val calendar = Calendar.getInstance()
         calendar.time = date
@@ -277,7 +278,7 @@ class RequestOTFragment : Fragment() {
 
     fun checkedBreakToTimeProcess(){
         val toTimeInput = etToTimeReqOT.text.toString()
-        val formatDate = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         val date = formatDate.parse(toTimeInput)
         val calendar = Calendar.getInstance()
         calendar.time = date
@@ -288,7 +289,7 @@ class RequestOTFragment : Fragment() {
 
     fun uncheckedBreakToTimeProcess(){
         val toTimeInput = etToTimeReqOT.text.toString()
-        val formatDate = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         val date = formatDate.parse(toTimeInput)
         val calendar = Calendar.getInstance()
         calendar.time = date

@@ -1,4 +1,4 @@
-package com.example.attendanceapp.fragment.checkIncheckOut
+package com.example.attendanceapp.fragment.home
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import androidx.core.content.edit
+import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
 
 class CheckInOutFragment : Fragment() {
@@ -32,7 +33,7 @@ class CheckInOutFragment : Fragment() {
     lateinit var checkOut : TextView
 
     //Container stored pref
-    var time: String? = null
+    var timeCheckIn: String? = null
     var timeCheckOut: String? = null
 
     lateinit var sharedPreferences: SharedPreferences
@@ -50,18 +51,19 @@ class CheckInOutFragment : Fragment() {
         checkOut = view.findViewById(R.id.tvCheckOut)
 
         //Date
-        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
         val currentDate : String = dateFormat.format(Date())
 
         checkOutButton.visibility = View.GONE
         checkInButton.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val simpleDateFormat = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
             val currentTime : String = simpleDateFormat.format(Date().time)
 
             checkIn.text = getString(R.string.check_in_at,currentTime)
             checkInButton.visibility = View.GONE
             checkOutButton.visibility = View.VISIBLE
-            saveButtonState("out")
+            saveButtonState(ButtonEnum.BUTTON_STATE_OUT.state)
+
             sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
 
 
@@ -83,20 +85,20 @@ class CheckInOutFragment : Fragment() {
             checkInDataList.add(newData)
 
             sharedPreferences.edit {
-                putString("timeCheckIn", currentTime)
+                putString(SharePrefKeys.TIME_CHECKIN.data, currentTime)
                 putString(ActivityLogKeyEnum.CHECK_IN_LIST.key, gson.toJson(checkInDataList))
             }
 
         }
 
         checkOutButton.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val simpleDateFormat = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
             val currentTimeCheckOut : String = simpleDateFormat.format(Date().time)
 
             checkOut.text = getString(R.string.check_out_at,currentTimeCheckOut)
             checkOutButton.visibility = View.GONE
             checkInButton.visibility = View.VISIBLE
-            saveButtonState("in")
+            saveButtonState(ButtonEnum.BUTTON_STATE_IN.state)
             sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
 
             //
@@ -120,7 +122,7 @@ class CheckInOutFragment : Fragment() {
 
 
             sharedPreferences.edit {
-                putString("timeCheckOut", currentTimeCheckOut)
+                putString(SharePrefKeys.TIME_CHECKOUT.data, currentTimeCheckOut)
                 putString(ActivityLogKeyEnum.CHECK_OUT_LIST.key, gson.toJson(checkOutdataList))
             }
         }
@@ -140,7 +142,7 @@ class CheckInOutFragment : Fragment() {
 
         val buttonState = loadSaveButtonState()
 
-        if(buttonState == "in"){
+        if(buttonState == ButtonEnum.BUTTON_STATE_IN.state){
             checkInButton.visibility = View.VISIBLE
             checkOutButton.visibility = View.GONE
         }else {
@@ -149,8 +151,8 @@ class CheckInOutFragment : Fragment() {
         }
 
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-        val receiveTimeCheckIn = sharedPreferences.getString("timeCheckIn","")
-        val receiveTimeCheckOut = sharedPreferences.getString("timeCheckOut","")
+        val receiveTimeCheckIn = sharedPreferences.getString(SharePrefKeys.TIME_CHECKIN.data,"")
+        val receiveTimeCheckOut = sharedPreferences.getString(SharePrefKeys.TIME_CHECKOUT.data,"")
 
 
         if(!receiveTimeCheckIn.isNullOrEmpty()) {
@@ -165,14 +167,16 @@ class CheckInOutFragment : Fragment() {
 
 
     fun saveData(){
+        val simpleDateFormat = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
+        val currentTime : String = simpleDateFormat.format(Date().time)
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
 
-        time = checkIn.text.toString()
-        timeCheckOut = checkOut.text.toString()
+        timeCheckIn = currentTime
+        timeCheckOut = currentTime
 
         sharedPreferences.edit {
-            putString("key time", time)
-            putString("key timeCheckOut", timeCheckOut)
+            putString(SharePrefKeys.TIME_CHECKIN.data, timeCheckIn)
+            putString(SharePrefKeys.TIME_CHECKOUT.data, timeCheckOut)
         }
 
     }
@@ -180,10 +184,10 @@ class CheckInOutFragment : Fragment() {
     fun retreiveData(){
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
 
-        time = sharedPreferences.getString("key time",getString(R.string.check_in_at_text))
-        timeCheckOut = sharedPreferences.getString("key timeCheckOut",getString(R.string.check_out_at_text))
+        timeCheckIn = sharedPreferences.getString(SharePrefKeys.TIME_CHECKIN.data,getString(R.string.check_in_at_text))
+        timeCheckOut = sharedPreferences.getString(SharePrefKeys.TIME_CHECKOUT.data,getString(R.string.check_out_at_text))
 
-        checkIn.text = time
+        checkIn.text = timeCheckIn
         checkOut.text = timeCheckOut
 
     }
@@ -199,6 +203,6 @@ class CheckInOutFragment : Fragment() {
 
     fun loadSaveButtonState() : String {
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-        return sharedPreferences.getString(ButtonEnum.BUTTON_STATE.state,"in") ?: "in"
+        return sharedPreferences.getString(ButtonEnum.BUTTON_STATE.state, ButtonEnum.BUTTON_STATE_IN.state) ?: ButtonEnum.BUTTON_STATE_IN.state
     }
 }

@@ -28,6 +28,7 @@ import java.util.Date
 import java.util.Locale
 import androidx.core.content.edit
 import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
+import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
 
@@ -130,10 +131,10 @@ class RequestLeaveFragment : Fragment() {
 
         btnLeaveSave.isEnabled = false
         btnLeaveSave.setOnClickListener {
-            Toast.makeText(requireContext(), "Request Leave was saved.", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), getString(R.string.request_leave_toast), Toast.LENGTH_LONG).show()
 
             //Date
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
             val currentDate : String = dateFormat.format(Date())
 
             val formattedFromDate = parsedDateFormat(etFromDate.text.toString())
@@ -163,11 +164,11 @@ class RequestLeaveFragment : Fragment() {
 
             sharedPreferences.edit {
                 putString(ActivityLogKeyEnum.REQUEST_LEAVE_LIST.key, gson.toJson(requestLeaveDataList))
-                putString("leaveType", leaveTypeSpinner.toString())
-                putString("fromDateLeave", etFromDate.text.toString())
-                putString("toDateLeave", etToDate.text.toString())
-                putString("period", periodSpinner.toString())
-                putString("reasonLeave", etLeaveReason.text.toString())
+                putString(SharePrefKeys.LEAVE_TYPE.data, leaveTypeSpinner.toString())
+                putString(SharePrefKeys.FROM_DATE_LEAVE.data, etFromDate.text.toString())
+                putString(SharePrefKeys.TO_DATE_LEAVE.data, etToDate.text.toString())
+                putString(SharePrefKeys.PERIOD.data, periodSpinner.toString())
+                putString(SharePrefKeys.REASON_LEAVE.data, etLeaveReason.text.toString())
             }
 
 
@@ -274,8 +275,8 @@ class RequestLeaveFragment : Fragment() {
     }
 
     fun parsedDateFormat(dateString: String) : String {
-        val inputFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        val inputFormat = SimpleDateFormat(DateTimeFormat.PARSE_DATE_PATTERN.format, Locale.getDefault())
+        val outputFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
 
         val date = inputFormat.parse(dateString)
 

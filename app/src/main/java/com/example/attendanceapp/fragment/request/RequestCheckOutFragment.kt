@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import androidx.core.content.edit
+import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
 
@@ -113,11 +114,10 @@ class RequestCheckOutFragment : Fragment() {
         saveButtonReqCheckOut.isEnabled = false
         saveButtonReqCheckOut.setOnClickListener {
             val timeReqCheckOut = etTimeReqCheckout.text.toString()
-            Log.d("RequestCheckOut", "TimeRequest sent: $timeReqCheckOut")
 
-            Toast.makeText(requireContext(), "Request Check-out was saved.", Toast.LENGTH_LONG).show()
-//Date
-            val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            Toast.makeText(requireContext(), getString(R.string.request_checkout_toast), Toast.LENGTH_LONG).show()
+            //Date
+            val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
             val currentDate : String = dateFormat.format(Date())
 
             sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
@@ -140,13 +140,13 @@ class RequestCheckOutFragment : Fragment() {
             requestCheckOutList.add(newRequestCheckOutData)
 
             sharedPreferences.edit {
-                putString(ButtonEnum.BUTTON_STATE.state, "in")
+                putString(ButtonEnum.BUTTON_STATE.state, ButtonEnum.BUTTON_STATE_IN.state)
                 putString(
                     ActivityLogKeyEnum.REQUEST_CHECKOUT_LIST.key,
                     gson.toJson(requestCheckOutList)
                 )
-                putString("dateRequestCheckOut", etDateReqCheckOut.text.toString())
-                putString("timeCheckOut", timeReqCheckOut)
+                putString(SharePrefKeys.DATE_REQUEST_CHECKOUT.data, etDateReqCheckOut.text.toString())
+                putString(SharePrefKeys.TIME_CHECKOUT.data, timeReqCheckOut)
             }
 
             etDateReqCheckOut.text = ""
@@ -197,7 +197,7 @@ class RequestCheckOutFragment : Fragment() {
         requestTimeCheckOut = etTimeReqCheckout.text.toString()
 
         sharedPreferences.edit {
-            putString("timeReqCheckOut", requestTimeCheckOut)
+            putString(SharePrefKeys.SAVE_TIME_CHECKOUT.data, requestTimeCheckOut)
         }
 
     }
