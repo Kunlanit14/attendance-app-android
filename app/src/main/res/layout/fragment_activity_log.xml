@@ -9,7 +9,7 @@
     android:layout_marginRight="5dp"
     android:padding="16dp"
     android:stretchColumns="*"
-    tools:context=".screens.activityLog.ActivityLogFragment">
+    tools:context=".fragment.activityLog.ActivityLogFragment">
 
     <TableRow android:id="@+id/tbRow1">
 

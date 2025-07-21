@@ -12,9 +12,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.attendanceapp.screens.activityLog.ActivityLogFragment
-import com.example.attendanceapp.screens.checkIncheckOut.CheckInOutFragment
-import com.example.attendanceapp.screens.request.RequestFragment
+import com.example.attendanceapp.fragment.activityLog.ActivityLogFragment
+import com.example.attendanceapp.fragment.checkIncheckOut.CheckInOutFragment
+import com.example.attendanceapp.fragment.request.RequestFragment
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
