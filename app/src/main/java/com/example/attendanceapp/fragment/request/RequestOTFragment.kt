@@ -60,154 +60,15 @@ class RequestOTFragment : Fragment() {
         etReason = view.findViewById(R.id.etReason)
         checkBoxBreak = view.findViewById(R.id.checkBoxBreak)
 
+        handleCalendar()
+        saveDataRequestOT()
+        clearDataRequestOT()
+        handleCheckBoxBreak()
+        handleDateTextChanged()
+        handleFromTimeTextChanged()
+        handleToTimeTextChanged()
+        handleReasonTextChanged()
 
-        btnCalendarOT.setOnClickListener {
-            CalendarPicker.showDatePicker(requireContext()) {
-                    selectedDate ->
-                etDateRequestOT.text = selectedDate
-            }
-        }
-
-
-        btnSaveOT.isEnabled = false
-        btnSaveOT.setOnClickListener {
-            Toast.makeText(requireContext(), getString(R.string.request_ot_toast), Toast.LENGTH_LONG).show()
-
-            //Date
-            val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
-            val currentDate : String = dateFormat.format(Date())
-
-            sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-            val gson = Gson()
-            val json = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_OT_LIST.key,null)
-            val type = object : TypeToken<MutableList<RequestOTData>>(){}.type
-            val requestOTDataList : MutableList<RequestOTData> = if (json != null) {
-                gson.fromJson(json, type)
-            } else {
-                mutableListOf()
-            }
-
-            val newRequestOTData = RequestOTData(
-                currentDate = currentDate,
-                requestType = RequestTypeEnum.REQUEST_OT.type,
-                otDateRequest = currentDate,
-                fromTime = etFromTimeReqOT.text.toString(),
-                toTime = etToTimeReqOT.text.toString(),
-                reasonOT = etReason.text.toString(),
-            )
-            requestOTDataList.add(newRequestOTData)
-
-            sharedPreferences.edit {
-                putString(ActivityLogKeyEnum.REQUEST_OT_LIST.key,gson.toJson(requestOTDataList))
-            }
-
-            // Clear data
-            etDateRequestOT.text = ""
-            etFromTimeReqOT.text.clear()
-            etToTimeReqOT.text.clear()
-            etReason.text.clear()
-        }
-
-        btnCancelOT.setOnClickListener {
-            etDateRequestOT.text = ""
-            etFromTimeReqOT.text.clear()
-            etToTimeReqOT.text.clear()
-            etReason.text.clear()
-        }
-
-        checkBoxBreak.setOnCheckedChangeListener { checkBox, isChecked ->
-            if(isChecked) {
-                checkedBreakFromTimeProcess()
-                checkedBreakToTimeProcess()
-            } else {
-                uncheckedBreakFromTimeProcess()
-                uncheckedBreakToTimeProcess()
-            }
-        }
-
-        etDateRequestOT.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                updateButtonStateReqOT()
-            }
-
-        })
-
-        etFromTimeReqOT.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                updateButtonStateReqOT()
-            }
-
-        })
-        etToTimeReqOT.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                updateButtonStateReqOT()
-            }
-
-        })
-        etReason.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                updateButtonStateReqOT()
-            }
-
-        })
-
-        // Inflate the layout for this fragment
         return view
     }
 
@@ -298,5 +159,166 @@ class RequestOTFragment : Fragment() {
         etToTimeReqOT.setText(toTimeWithBreak)
     }
 
+    fun handleCalendar(){
+        btnCalendarOT.setOnClickListener {
+            CalendarPicker.showDatePicker(requireContext()) {
+                    selectedDate ->
+                etDateRequestOT.text = selectedDate
+            }
+        }
+    }
+
+    fun saveDataRequestOT(){
+        btnSaveOT.isEnabled = false
+        btnSaveOT.setOnClickListener {
+            Toast.makeText(requireContext(), getString(R.string.request_ot_toast), Toast.LENGTH_LONG).show()
+
+            //Date
+            val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
+            val currentDate : String = dateFormat.format(Date())
+
+            sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
+            val gson = Gson()
+            val json = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_OT_LIST.key,null)
+            val type = object : TypeToken<MutableList<RequestOTData>>(){}.type
+            val requestOTDataList : MutableList<RequestOTData> = if (json != null) {
+                gson.fromJson(json, type)
+            } else {
+                mutableListOf()
+            }
+
+            val newRequestOTData = RequestOTData(
+                currentDate = currentDate,
+                requestType = RequestTypeEnum.REQUEST_OT.type,
+                otDateRequest = currentDate,
+                fromTime = etFromTimeReqOT.text.toString(),
+                toTime = etToTimeReqOT.text.toString(),
+                reasonOT = etReason.text.toString(),
+            )
+            requestOTDataList.add(newRequestOTData)
+
+            sharedPreferences.edit {
+                putString(ActivityLogKeyEnum.REQUEST_OT_LIST.key,gson.toJson(requestOTDataList))
+            }
+
+            clearDataSaved()
+        }
+    }
+    fun clearDataRequestOT(){
+        btnCancelOT.setOnClickListener {
+            clearDataSaved()
+        }
+    }
+
+    fun clearDataSaved() {
+        etDateRequestOT.text = ""
+        etFromTimeReqOT.text.clear()
+        etToTimeReqOT.text.clear()
+        etReason.text.clear()
+    }
+
+    fun handleCheckBoxBreak(){
+        checkBoxBreak.setOnCheckedChangeListener { checkBox, isChecked ->
+            if(isChecked) {
+                checkedBreakFromTimeProcess()
+                checkedBreakToTimeProcess()
+            } else {
+                uncheckedBreakFromTimeProcess()
+                uncheckedBreakToTimeProcess()
+            }
+        }
+    }
+
+    fun handleDateTextChanged(){
+        etDateRequestOT.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {}
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                updateButtonStateReqOT()
+            }
+
+        })
+    }
+
+    fun handleFromTimeTextChanged(){
+        etFromTimeReqOT.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {}
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                updateButtonStateReqOT()
+            }
+
+        })
+    }
+
+    fun handleToTimeTextChanged(){
+        etToTimeReqOT.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {}
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                updateButtonStateReqOT()
+            }
+
+        })
+    }
+
+    fun handleReasonTextChanged(){
+        etReason.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {}
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                updateButtonStateReqOT()
+            }
+
+        })
+    }
 
 }

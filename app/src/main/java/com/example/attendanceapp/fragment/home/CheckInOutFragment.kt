@@ -50,14 +50,32 @@ class CheckInOutFragment : Fragment() {
         checkIn = view.findViewById(R.id.tvCheckIn)
         checkOut = view.findViewById(R.id.tvCheckOut)
 
-        //Date
-        val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
-        val currentDate : String = dateFormat.format(Date())
+        saveCheckIn()
+        saveCheckOut()
+
+        return view
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        retreiveData()
+        handleButtonState()
+        handleRetrieveTimeChecked()
+    }
+
+    fun saveCheckIn(){
+
+        val currentDate : String = getCurrentDate()
+        val currentTime : String = getCurrentTime()
 
         checkOutButton.visibility = View.GONE
         checkInButton.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
-            val currentTime : String = simpleDateFormat.format(Date().time)
 
             checkIn.text = getString(R.string.check_in_at,currentTime)
             checkInButton.visibility = View.GONE
@@ -65,7 +83,6 @@ class CheckInOutFragment : Fragment() {
             saveButtonState(ButtonEnum.BUTTON_STATE_OUT.state)
 
             sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-
 
             //List for store many data in Tablelayout
             val gson = Gson()
@@ -90,18 +107,18 @@ class CheckInOutFragment : Fragment() {
             }
 
         }
+    }
 
+    fun saveCheckOut(){
+
+        val currentDate : String = getCurrentDate()
+        val currentTimeCheckOut : String = getCurrentTime()
         checkOutButton.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
-            val currentTimeCheckOut : String = simpleDateFormat.format(Date().time)
-
             checkOut.text = getString(R.string.check_out_at,currentTimeCheckOut)
             checkOutButton.visibility = View.GONE
             checkInButton.visibility = View.VISIBLE
             saveButtonState(ButtonEnum.BUTTON_STATE_IN.state)
             sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-
-            //
 
             val gson = Gson()
             val jsonCheckOut = sharedPreferences.getString(ActivityLogKeyEnum.CHECK_OUT_LIST.key,null)
@@ -120,55 +137,16 @@ class CheckInOutFragment : Fragment() {
 
             checkOutdataList.add(newCheckOutData)
 
-
             sharedPreferences.edit {
                 putString(SharePrefKeys.TIME_CHECKOUT.data, currentTimeCheckOut)
                 putString(ActivityLogKeyEnum.CHECK_OUT_LIST.key, gson.toJson(checkOutdataList))
             }
         }
-
-        return view
-
     }
-
-    override fun onPause() {
-        super.onPause()
-        saveData()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        retreiveData()
-
-        val buttonState = loadSaveButtonState()
-
-        if(buttonState == ButtonEnum.BUTTON_STATE_IN.state){
-            checkInButton.visibility = View.VISIBLE
-            checkOutButton.visibility = View.GONE
-        }else {
-            checkInButton.visibility = View.GONE
-            checkOutButton.visibility = View.VISIBLE
-        }
-
-        sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-        val receiveTimeCheckIn = sharedPreferences.getString(SharePrefKeys.TIME_CHECKIN.data,"")
-        val receiveTimeCheckOut = sharedPreferences.getString(SharePrefKeys.TIME_CHECKOUT.data,"")
-
-
-        if(!receiveTimeCheckIn.isNullOrEmpty()) {
-            checkIn.text = getString(R.string.check_in_at,receiveTimeCheckIn)
-        }
-
-        if(!receiveTimeCheckOut.isNullOrEmpty()) {
-            checkOut.text = getString(R.string.check_out_at,receiveTimeCheckOut)
-        }
-
-    }
-
 
     fun saveData(){
-        val simpleDateFormat = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
-        val currentTime : String = simpleDateFormat.format(Date().time)
+
+        val currentTime : String = getCurrentTime()
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
 
         timeCheckIn = currentTime
@@ -200,9 +178,46 @@ class CheckInOutFragment : Fragment() {
 
     }
 
+    fun handleButtonState(){
+        val buttonState = loadSaveButtonState()
+
+        if(buttonState == ButtonEnum.BUTTON_STATE_IN.state){
+            checkInButton.visibility = View.VISIBLE
+            checkOutButton.visibility = View.GONE
+        }else {
+            checkInButton.visibility = View.GONE
+            checkOutButton.visibility = View.VISIBLE
+        }
+    }
+
+    fun handleRetrieveTimeChecked(){
+        sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
+        val receiveTimeCheckIn = sharedPreferences.getString(SharePrefKeys.TIME_CHECKIN.data,"")
+        val receiveTimeCheckOut = sharedPreferences.getString(SharePrefKeys.TIME_CHECKOUT.data,"")
+
+        if(!receiveTimeCheckIn.isNullOrEmpty()) {
+            checkIn.text = getString(R.string.check_in_at,receiveTimeCheckIn)
+        }
+
+        if(!receiveTimeCheckOut.isNullOrEmpty()) {
+            checkOut.text = getString(R.string.check_out_at,receiveTimeCheckOut)
+        }
+    }
 
     fun loadSaveButtonState() : String {
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
         return sharedPreferences.getString(ButtonEnum.BUTTON_STATE.state, ButtonEnum.BUTTON_STATE_IN.state) ?: ButtonEnum.BUTTON_STATE_IN.state
+    }
+
+    fun getCurrentDate() : String {
+        //Date
+        val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
+    fun getCurrentTime() : String {
+        //Date
+        val simpleTimeFormat = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
+        return simpleTimeFormat.format(Date().time)
     }
 }

@@ -11,7 +11,6 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColor
 import androidx.fragment.app.Fragment
 import com.example.attendanceapp.R
 import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
@@ -25,8 +24,6 @@ import com.example.attendanceapp.data.model.RequestLeaveData
 import com.example.attendanceapp.data.model.RequestOTData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import androidx.core.graphics.toColorInt
-import androidx.core.graphics.toColorLong
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
 
 class ActivityLogFragment : Fragment() {
@@ -49,19 +46,20 @@ class ActivityLogFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        loadActivitiesLog()
+    }
 
-
+    fun loadActivitiesLog(){
         val headerRow = tableActivities.getChildAt(0)
         tableActivities.removeAllViews()
         tableActivities.addView(headerRow)
-
 
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
         val json = sharedPreferences.getString(ActivityLogKeyEnum.CHECK_IN_LIST.key,null)
         val type = object : TypeToken<List<CheckInData>>(){}.type
         val checkInList : List<CheckInData> = if (json != null) {
             Gson().fromJson(json, type)
-         }else {
+        }else {
             mutableListOf()
         }
 
@@ -219,7 +217,6 @@ class ActivityLogFragment : Fragment() {
 
             tableActivities.addView(row)
         }
-
     }
 
 }

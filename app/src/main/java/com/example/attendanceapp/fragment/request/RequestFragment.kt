@@ -29,6 +29,11 @@ class RequestFragment : Fragment() {
         spinner = view.findViewById(R.id.spinnerRequestType)
         tvRequestType = view.findViewById(R.id.tvRequest)
 
+        spinnerAdapter()
+        return view
+    }
+
+    fun spinnerAdapter(){
         var arrayAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.RequestType,
@@ -36,8 +41,12 @@ class RequestFragment : Fragment() {
         )
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
         spinner.adapter = arrayAdapter
+
+        spinnerItemSelected()
+    }
+
+    fun spinnerItemSelected(){
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -46,66 +55,37 @@ class RequestFragment : Fragment() {
                 id: Long
             ) {
                 val selectItem = parent?.getItemAtPosition(position).toString()
+                val fragment = createRequestFragment(selectItem)
 
-                when (selectItem){
-                    RequestTypeEnum.SPN_REQUEST_CHECKIN.type -> {
-                        val budle = Bundle()
-
-                        val requestCheckInFragment = RequestCheckInFragment()
-                        requestCheckInFragment.arguments = budle
-
-                        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.requestFrame, requestCheckInFragment)
-                        fragmentTransaction.commit()
-
+                fragment?.let {
+                    val bundle = Bundle().apply {
+                        putString(RequestTypeEnum.REQUEST_TYPE.type,selectItem)
                     }
-                    RequestTypeEnum.SPN_REQUEST_CHECKOUT.type -> { val budle = Bundle()
-
-                        val requestCheckOutFragment = RequestCheckOutFragment()
-                        requestCheckOutFragment.arguments = budle
-
-                        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.requestFrame,RequestCheckOutFragment() )
-                        fragmentTransaction.commit()
-
-                    }
-                    RequestTypeEnum.SPN_REQUEST_OT.type -> { val budle = Bundle()
-
-                        val requestOTFragment = RequestOTFragment()
-                        requestOTFragment.arguments = budle
-
-                        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.requestFrame,RequestOTFragment() )
-                        fragmentTransaction.commit()
-
-                    }
-                    RequestTypeEnum.SPN_REQUEST_LEAVE.type -> { val budle = Bundle()
-
-                        val requestLeaveFragment = RequestLeaveFragment()
-                        requestLeaveFragment.arguments = budle
-
-                        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.requestFrame,RequestLeaveFragment() )
-                        fragmentTransaction.commit()
-
-                    }
-                    else -> ""
+                    replaceFragment(it,bundle)
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
 
         }
-
-        // Inflate the layout for this fragment
-        return view
     }
 
+    fun replaceFragment(fragment : Fragment,args: Bundle){
+        fragment.arguments = args
+        childFragmentManager.beginTransaction()
+            .replace(R.id.requestFrame,fragment)
+            .commit()
+    }
+
+    fun createRequestFragment(type : String) : Fragment? {
+        return when (type){
+            RequestTypeEnum.SPN_REQUEST_CHECKIN.type -> RequestCheckInFragment()
+            RequestTypeEnum.SPN_REQUEST_CHECKOUT.type -> RequestCheckOutFragment()
+            RequestTypeEnum.SPN_REQUEST_OT.type -> RequestOTFragment()
+            RequestTypeEnum.SPN_REQUEST_LEAVE.type -> RequestLeaveFragment()
+            else -> null
+        }
+    }
 
 
 }
