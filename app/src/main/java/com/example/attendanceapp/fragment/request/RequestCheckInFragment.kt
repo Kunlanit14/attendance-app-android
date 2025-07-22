@@ -55,62 +55,65 @@ open class RequestCheckInFragment : Fragment() {
         etTimeRequestCheckIn = view.findViewById(R.id.etTimeCheckIn)
         cancelButton = view.findViewById(R.id.btnCancel)
 
+        handleCalendar()
+        saveDataRequestCheckIn()
+        clearDataRequestCheckIn()
+        handleDateTextChanged()
+        handleTimeTextChanged()
 
-        btnCalendar.setOnClickListener {
-            CalendarPicker.showDatePicker(requireContext()) {
-                selectedDate ->
-                etDateRequestcheck.text = selectedDate
+        return view
+    }
 
-            }
+    override fun onPause() {
+        super.onPause()
+        saveRequestTimeCheckIn()
+    }
+
+
+    fun saveRequestTimeCheckIn(){
+
+        sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
+        requestTime = etTimeRequestCheckIn.text.toString()
+        sharedPreferences.edit {
+            putString(SharePrefKeys.SAVE_TIME.data, requestTime)
         }
 
+    }
+
+    fun updateButtonStateRequestCheckIn(){
+
+        val dateInput = etDateRequestcheck.text.toString().trim()
+        val timeInput = etTimeRequestCheckIn.text.toString().trim()
+        val isEnabled = dateInput.isNotEmpty() && timeInput.isNotEmpty()
+        val isTimeValid = isValidTime(timeInput)
+
+        val enableButton = isEnabled && isTimeValid
+
+        saveButton.isEnabled = enableButton
+        if(enableButton){
+            saveButton.setBackgroundResource(R.drawable.button_save)
+        }else{
+            saveButton.setBackgroundResource(R.drawable.button_save_disable)
+        }
+
+    }
+
+    fun isValidTime(timeString : String) : Boolean{
+        val timeRegex = Regex("^(?:[01]\\d|2[0-3]):[0-5]\\d$")
+        return timeRegex.matches(timeString)
+    }
+
+    fun handleCalendar(){
+        btnCalendar.setOnClickListener {
+            CalendarPicker.showDatePicker(requireContext()) {
+                    selectedDate ->
+                etDateRequestcheck.text = selectedDate
+            }
+        }
+    }
+
+    fun saveDataRequestCheckIn(){
         saveButton.isEnabled = false
-
-        etDateRequestcheck.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                updateButtonState()
-            }
-
-        })
-
-        etTimeRequestCheckIn.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) { }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) { }
-
-            override fun afterTextChanged(s: Editable?) {
-                updateButtonState()
-
-            }
-
-        })
-
         saveButton.setOnClickListener {
             val timeRequest = etTimeRequestCheckIn.text.toString()
 
@@ -144,63 +147,69 @@ open class RequestCheckInFragment : Fragment() {
                 putString(SharePrefKeys.DATE_REQUEST_CHECKIN.data, etDateRequestcheck.text.toString())
                 putString(SharePrefKeys.TIME_CHECKIN.data, timeRequest)
             }
-
-            etDateRequestcheck.text = ""
-            etTimeRequestCheckIn.text.clear()
+            clearDataSaved()
 
         }
+    }
 
+    fun clearDataRequestCheckIn(){
         cancelButton.setOnClickListener {
-            etDateRequestcheck.text = ""
-            etTimeRequestCheckIn.text.clear()
+            clearDataSaved()
         }
-
-        // Inflate the layout for this fragment
-        return view
     }
 
-    override fun onPause() {
-        super.onPause()
-        saveRequestTimeCheckIn()
+    fun clearDataSaved(){
+        etDateRequestcheck.text = ""
+        etTimeRequestCheckIn.text.clear()
     }
 
+    fun handleDateTextChanged(){
+        etDateRequestcheck.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+            }
 
-    fun saveRequestTimeCheckIn(){
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+            }
 
-        sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
+            override fun afterTextChanged(s: Editable?) {
+                updateButtonStateRequestCheckIn()
+            }
 
-        requestTime = etTimeRequestCheckIn.text.toString()
-
-        sharedPreferences.edit {
-            putString(SharePrefKeys.SAVE_TIME.data, requestTime)
-        }
-
+        })
     }
 
-    fun updateButtonState(){
+    fun handleTimeTextChanged(){
+        etTimeRequestCheckIn.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) { }
 
-        val dateInput = etDateRequestcheck.text.toString().trim()
-        val timeInput = etTimeRequestCheckIn.text.toString().trim()
-        val isEnabled = dateInput.isNotEmpty() && timeInput.isNotEmpty()
-        val isTimeValid = isValidTime(timeInput)
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) { }
 
-        val enableButton = isEnabled && isTimeValid
+            override fun afterTextChanged(s: Editable?) {
+                updateButtonStateRequestCheckIn()
 
-        saveButton.isEnabled = enableButton
-        if(enableButton){
-            saveButton.setBackgroundResource(R.drawable.button_save)
-        }else{
-            saveButton.setBackgroundResource(R.drawable.button_save_disable)
-        }
+            }
 
-
+        })
     }
-
-    fun isValidTime(timeString : String) : Boolean{
-        val timeRegex = Regex("^(?:[01]\\d|2[0-3]):[0-5]\\d$")
-        return timeRegex.matches(timeString)
-    }
-
-
 
 }

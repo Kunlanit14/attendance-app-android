@@ -55,54 +55,13 @@ class RequestFragment : Fragment() {
                 id: Long
             ) {
                 val selectItem = parent?.getItemAtPosition(position).toString()
+                val fragment = createRequestFragment(selectItem)
 
-                when (selectItem){
-                    RequestTypeEnum.SPN_REQUEST_CHECKIN.type -> {
-                        val budle = Bundle()
-
-                        val requestCheckInFragment = RequestCheckInFragment()
-                        requestCheckInFragment.arguments = budle
-
-                        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.requestFrame, requestCheckInFragment)
-                        fragmentTransaction.commit()
-
+                fragment?.let {
+                    val bundle = Bundle().apply {
+                        putString(RequestTypeEnum.REQUEST_TYPE.type,selectItem)
                     }
-                    RequestTypeEnum.SPN_REQUEST_CHECKOUT.type -> { val budle = Bundle()
-
-                        val requestCheckOutFragment = RequestCheckOutFragment()
-                        requestCheckOutFragment.arguments = budle
-
-                        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.requestFrame,RequestCheckOutFragment() )
-                        fragmentTransaction.commit()
-
-                    }
-                    RequestTypeEnum.SPN_REQUEST_OT.type -> { val budle = Bundle()
-
-                        val requestOTFragment = RequestOTFragment()
-                        requestOTFragment.arguments = budle
-
-                        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.requestFrame,RequestOTFragment() )
-                        fragmentTransaction.commit()
-
-                    }
-                    RequestTypeEnum.SPN_REQUEST_LEAVE.type -> { val budle = Bundle()
-
-                        val requestLeaveFragment = RequestLeaveFragment()
-                        requestLeaveFragment.arguments = budle
-
-                        val fragmentManager : FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.requestFrame,RequestLeaveFragment() )
-                        fragmentTransaction.commit()
-
-                    }
-                    else -> ""
+                    replaceFragment(it,bundle)
                 }
             }
 
@@ -111,6 +70,22 @@ class RequestFragment : Fragment() {
         }
     }
 
+    fun replaceFragment(fragment : Fragment,args: Bundle){
+        fragment.arguments = args
+        childFragmentManager.beginTransaction()
+            .replace(R.id.requestFrame,fragment)
+            .commit()
+    }
+
+    fun createRequestFragment(type : String) : Fragment? {
+        return when (type){
+            RequestTypeEnum.SPN_REQUEST_CHECKIN.type -> RequestCheckInFragment()
+            RequestTypeEnum.SPN_REQUEST_CHECKOUT.type -> RequestCheckOutFragment()
+            RequestTypeEnum.SPN_REQUEST_OT.type -> RequestOTFragment()
+            RequestTypeEnum.SPN_REQUEST_LEAVE.type -> RequestLeaveFragment()
+            else -> null
+        }
+    }
 
 
 }

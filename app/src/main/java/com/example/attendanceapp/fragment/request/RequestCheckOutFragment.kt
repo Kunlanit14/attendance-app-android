@@ -57,60 +57,62 @@ class RequestCheckOutFragment : Fragment() {
         saveButtonReqCheckOut = view.findViewById(R.id.btnSaveCheckOut)
         cancelButtonReqCheckOut = view.findViewById(R.id.btnCancelCheckOut)
 
+        handleCalendar()
+        saveDataRequestCheckOut()
+        clearDataRequestCheckOut()
+        handleDateTextChanged()
+        handleTimeTextChanged()
 
+        return view
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveRequestTimeCheckOut()
+    }
+
+    fun updateButtonStateReqCheckOut(){
+        val dateReqCheckOutInput = etDateReqCheckOut.text.toString().trim()
+        val timeReqCheckOutInput = etTimeReqCheckout.text.toString().trim()
+        val isEnable = dateReqCheckOutInput.isNotEmpty() && timeReqCheckOutInput.isNotEmpty()
+        val isTimeValid = isValidTime(timeReqCheckOutInput)
+
+        val enableButton = isEnable && isTimeValid
+
+        saveButtonReqCheckOut.isEnabled = enableButton
+        if(enableButton){
+            saveButtonReqCheckOut.setBackgroundResource(R.drawable.button_save)
+        }else{
+            saveButtonReqCheckOut.setBackgroundResource(R.drawable.button_save_disable)
+        }
+
+    }
+
+    fun isValidTime(timeString : String) : Boolean{
+        val timeRegex = Regex("^(?:[01]\\d|2[0-3]):[0-5]\\d$")
+        return timeRegex.matches(timeString)
+    }
+
+    fun saveRequestTimeCheckOut(){
+
+        sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
+        requestTimeCheckOut = etTimeReqCheckout.text.toString()
+        sharedPreferences.edit {
+            putString(SharePrefKeys.SAVE_TIME_CHECKOUT.data, requestTimeCheckOut)
+        }
+
+    }
+
+    fun handleCalendar(){
         btnCalendar.setOnClickListener {
             CalendarPicker.showDatePicker(requireContext()) {
                     selectedDate ->
                 etDateReqCheckOut.text = selectedDate
             }
         }
+    }
 
-        etDateReqCheckOut.addTextChangedListener(object  : TextWatcher{
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {}
-
-            override fun afterTextChanged(s: Editable?)
-            {
-                updateButtonStateReqCheckOut()
-            }
-
-        })
-
-        etTimeReqCheckout.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) { }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?)
-            {
-                updateButtonStateReqCheckOut()
-            }
-
-        })
-
+    fun saveDataRequestCheckOut(){
         saveButtonReqCheckOut.isEnabled = false
         saveButtonReqCheckOut.setOnClickListener {
             val timeReqCheckOut = etTimeReqCheckout.text.toString()
@@ -148,58 +150,70 @@ class RequestCheckOutFragment : Fragment() {
                 putString(SharePrefKeys.DATE_REQUEST_CHECKOUT.data, etDateReqCheckOut.text.toString())
                 putString(SharePrefKeys.TIME_CHECKOUT.data, timeReqCheckOut)
             }
-
-            etDateReqCheckOut.text = ""
-            etTimeReqCheckout.text.clear()
+            clearDataSaved()
 
         }
+    }
 
+    fun clearDataRequestCheckOut(){
         cancelButtonReqCheckOut.setOnClickListener {
-            etDateReqCheckOut.text = ""
-            etTimeReqCheckout.text.clear()
+            clearDataSaved()
         }
-
-        return view
     }
 
-    override fun onPause() {
-        super.onPause()
-        saveRequestTimeCheckOut()
+    fun clearDataSaved(){
+        etDateReqCheckOut.text = ""
+        etTimeReqCheckout.text.clear()
     }
 
-    fun updateButtonStateReqCheckOut(){
-        val dateReqCheckOutInput = etDateReqCheckOut.text.toString().trim()
-        val timeReqCheckOutInput = etTimeReqCheckout.text.toString().trim()
-        val isEnable = dateReqCheckOutInput.isNotEmpty() && timeReqCheckOutInput.isNotEmpty()
-        val isTimeValid = isValidTime(timeReqCheckOutInput)
+    fun handleDateTextChanged(){
+        etDateReqCheckOut.addTextChangedListener(object  : TextWatcher{
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {}
 
-        val enableButton = isEnable && isTimeValid
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {}
 
-        saveButtonReqCheckOut.isEnabled = enableButton
-        if(enableButton){
-            saveButtonReqCheckOut.setBackgroundResource(R.drawable.button_save)
-        }else{
-            saveButtonReqCheckOut.setBackgroundResource(R.drawable.button_save_disable)
-        }
+            override fun afterTextChanged(s: Editable?)
+            {
+                updateButtonStateReqCheckOut()
+            }
 
-
+        })
     }
 
-    fun isValidTime(timeString : String) : Boolean{
-        val timeRegex = Regex("^(?:[01]\\d|2[0-3]):[0-5]\\d$")
-        return timeRegex.matches(timeString)
-    }
+    fun handleTimeTextChanged(){
+        etTimeReqCheckout.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) { }
 
-    fun saveRequestTimeCheckOut(){
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
 
-        sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
+            }
 
-        requestTimeCheckOut = etTimeReqCheckout.text.toString()
+            override fun afterTextChanged(s: Editable?)
+            {
+                updateButtonStateReqCheckOut()
+            }
 
-        sharedPreferences.edit {
-            putString(SharePrefKeys.SAVE_TIME_CHECKOUT.data, requestTimeCheckOut)
-        }
-
+        })
     }
 
 }

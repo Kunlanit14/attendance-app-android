@@ -63,20 +63,66 @@ class RequestLeaveFragment : Fragment() {
         etLeaveReason = view.findViewById(R.id.etReasonLeave)
 
 
+        handleCalendarFromDate()
+        handleCalendarToDate()
+        spinnerLeaveTypeAdapter()
+        spinnerPeriodAdapter()
+        saveDataRequestLeave()
+        clearDataRequestLeave()
+        handleFromDateTextChanged()
+        handleToDateTextChanged()
+        handleReasonTextChanged()
+
+        // Inflate the layout for this fragment
+        return view
+    }
+
+    fun updateButtonStateLeave(){
+        val selectedLeaveType = leaveTypeSpinner.isNotEmpty()
+        val selectedPeriodType = periodSpinner.isNotEmpty()
+        val fromDateLeave = etFromDate.text.toString()
+        val toDateLeave = etToDate.text.toString()
+        val reasonLeave = etLeaveReason.text.toString()
+
+        val enabledSaveLeave = selectedLeaveType && selectedPeriodType && fromDateLeave.isNotEmpty() && toDateLeave.isNotEmpty() && reasonLeave.isNotEmpty()
+
+        btnLeaveSave.isEnabled = enabledSaveLeave
+        if(enabledSaveLeave){
+            btnLeaveSave.setBackgroundResource(R.drawable.button_save)
+        }else{
+            btnLeaveSave.setBackgroundResource(R.drawable.button_save_disable)
+        }
+    }
+
+    fun parsedDateFormat(dateString: String) : String {
+        val inputFormat = SimpleDateFormat(DateTimeFormat.PARSE_DATE_PATTERN.format, Locale.getDefault())
+        val outputFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
+
+        val date = inputFormat.parse(dateString)
+
+        return date?.let { outputFormat.format(it) }?: ""
+
+    }
+
+    fun handleCalendarFromDate(){
         btnCalendarFromDate.setOnClickListener {
             CalendarPicker.showDatePicker(requireContext()) {
                     selectedDate ->
                 etFromDate.text = selectedDate
             }
         }
+    }
 
+    fun handleCalendarToDate(){
         btnCalendarToDate.setOnClickListener {
             CalendarPicker.showDatePicker(requireContext()) {
                     selectedDate ->
                 etToDate.text = selectedDate
             }
         }
+    }
 
+    fun spinnerLeaveTypeAdapter(){
         //Spinner Leave Type
         val leaveTypeAdapter = ArrayAdapter.createFromResource(
             requireContext(),
@@ -86,9 +132,12 @@ class RequestLeaveFragment : Fragment() {
 
         leaveTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         leaveTypeSpinner.adapter = leaveTypeAdapter
+        spinnerLeaveTypeItemSelected()
+    }
 
+    fun spinnerLeaveTypeItemSelected() {
         //Handle leave selection
-        leaveTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        leaveTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -101,8 +150,10 @@ class RequestLeaveFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
-
         }
+    }
+
+    fun spinnerPeriodAdapter(){
         //Spinner Period Type
         val periodAdapter = ArrayAdapter.createFromResource(
             requireContext(),
@@ -112,7 +163,10 @@ class RequestLeaveFragment : Fragment() {
 
         periodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         periodSpinner.adapter = periodAdapter
+        spinnerPeriodItemSelected()
+    }
 
+    fun spinnerPeriodItemSelected() {
         periodSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -128,7 +182,9 @@ class RequestLeaveFragment : Fragment() {
             }
 
         }
+    }
 
+    fun saveDataRequestLeave(){
         btnLeaveSave.isEnabled = false
         btnLeaveSave.setOnClickListener {
             Toast.makeText(requireContext(), getString(R.string.request_leave_toast), Toast.LENGTH_LONG).show()
@@ -171,23 +227,26 @@ class RequestLeaveFragment : Fragment() {
                 putString(SharePrefKeys.REASON_LEAVE.data, etLeaveReason.text.toString())
             }
 
-
-            leaveTypeSpinner.setSelection(0)
-            periodSpinner.setSelection(0)
-            etFromDate.text = ""
-            etToDate.text = ""
-            etLeaveReason.text.clear()
+            clearDataSaved()
 
         }
+    }
 
+    fun clearDataRequestLeave(){
         btnLeaveCancel.setOnClickListener {
-            leaveTypeSpinner.setSelection(0)
-            periodSpinner.setSelection(0)
-            etFromDate.text = ""
-            etToDate.text = ""
-            etLeaveReason.text.clear()
+            clearDataSaved()
         }
+    }
 
+    fun clearDataSaved(){
+        leaveTypeSpinner.setSelection(0)
+        periodSpinner.setSelection(0)
+        etFromDate.text = ""
+        etToDate.text = ""
+        etLeaveReason.text.clear()
+    }
+
+    fun handleFromDateTextChanged(){
         etFromDate.addTextChangedListener( object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -208,7 +267,9 @@ class RequestLeaveFragment : Fragment() {
             }
 
         })
+    }
 
+    fun handleToDateTextChanged(){
         etToDate.addTextChangedListener( object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -229,7 +290,9 @@ class RequestLeaveFragment : Fragment() {
             }
 
         })
+    }
 
+    fun handleReasonTextChanged(){
         etLeaveReason.addTextChangedListener( object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -250,38 +313,6 @@ class RequestLeaveFragment : Fragment() {
             }
 
         })
-
-        leaveTypeSpinner.onItemSelectedListener
-
-        // Inflate the layout for this fragment
-        return view
-    }
-
-    fun updateButtonStateLeave(){
-        val selectedLeaveType = leaveTypeSpinner.isNotEmpty()
-        val selectedPeriodType = periodSpinner.isNotEmpty()
-        val fromDateLeave = etFromDate.text.toString()
-        val toDateLeave = etToDate.text.toString()
-        val reasonLeave = etLeaveReason.text.toString()
-
-        val enabledSaveLeave = selectedLeaveType && selectedPeriodType && fromDateLeave.isNotEmpty() && toDateLeave.isNotEmpty() && reasonLeave.isNotEmpty()
-
-        btnLeaveSave.isEnabled = enabledSaveLeave
-        if(enabledSaveLeave){
-            btnLeaveSave.setBackgroundResource(R.drawable.button_save)
-        }else{
-            btnLeaveSave.setBackgroundResource(R.drawable.button_save_disable)
-        }
-    }
-
-    fun parsedDateFormat(dateString: String) : String {
-        val inputFormat = SimpleDateFormat(DateTimeFormat.PARSE_DATE_PATTERN.format, Locale.getDefault())
-        val outputFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
-
-        val date = inputFormat.parse(dateString)
-
-        return date?.let { outputFormat.format(it) }?: ""
-
     }
 
 
