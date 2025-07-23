@@ -11,7 +11,7 @@
         android:id="@+id/tvRequest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
+        android:layout_marginStart="33dp"
         android:layout_marginTop="54dp"
         android:text="Request type : "
         android:textColor="@color/black"
@@ -24,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:gravity="center_vertical"
         android:background="@drawable/button_outline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvRequest"
@@ -31,8 +32,11 @@
 
         <Spinner
             android:id="@+id/spinnerRequestType"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp" />
+            android:layout_width="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:dropDownWidth="match_parent"/>
 
     </LinearLayout>
 
