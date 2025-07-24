@@ -3,6 +3,7 @@ package com.example.attendanceapp.components
 import android.app.DatePickerDialog
 import android.content.Context
 import android.icu.util.Calendar
+import com.example.attendanceapp.common.constant.DateTimeFormat
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -11,7 +12,7 @@ import java.util.Locale
 object CalendarPicker {
     fun showDatePicker(
         context: Context,
-        dateFormat: String = "MM/dd/yyyy",
+        dateFormat: String = DateTimeFormat.DATE_PATTERN.format,
         minDate: Long? = null,
         maxDate: Long? = null,
         onDataSelected: (formattedDate : String) -> Unit

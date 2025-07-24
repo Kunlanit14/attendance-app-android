@@ -145,6 +145,10 @@ class RequestLeaveFragment : Fragment() {
                 id: Long
             ) {
                 updateButtonStateLeave()
+                val selectItem = parent?.getItemAtPosition(position).toString()
+                if (position > 0){
+                    Toast.makeText(requireContext(), selectItem, Toast.LENGTH_SHORT).show()
+                }
 
             }
 
@@ -175,6 +179,10 @@ class RequestLeaveFragment : Fragment() {
                 id: Long
             ) {
                 updateButtonStateLeave()
+                val selectItem = parent?.getItemAtPosition(position).toString()
+                if (position > 0){
+                    Toast.makeText(requireContext(), selectItem, Toast.LENGTH_SHORT).show()
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {

@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.attendanceapp.R
@@ -56,7 +57,9 @@ class RequestFragment : Fragment() {
             ) {
                 val selectItem = parent?.getItemAtPosition(position).toString()
                 val fragment = createRequestFragment(selectItem)
-
+                if (position > 0){
+                    Toast.makeText(requireContext(), selectItem, Toast.LENGTH_SHORT).show()
+                }
                 fragment?.let {
                     val bundle = Bundle().apply {
                         putString(RequestTypeEnum.REQUEST_TYPE.type,selectItem)

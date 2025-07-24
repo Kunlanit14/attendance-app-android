@@ -58,7 +58,7 @@ class RequestOTFragment : Fragment() {
         etFromTimeReqOT = view.findViewById(R.id.etFromTimeRequestOT)
         etToTimeReqOT = view.findViewById(R.id.etTimeRequestOT)
         etReason = view.findViewById(R.id.etReason)
-        checkBoxBreak = view.findViewById(R.id.checkBoxBreak)
+        checkBoxBreak = view.findViewById(R.id.checkBox)
 
         handleCalendar()
         saveDataRequestOT()
@@ -77,17 +77,22 @@ class RequestOTFragment : Fragment() {
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
         val checkInTime = sharedPreferences.getString(SharePrefKeys.TIME_CHECKIN.data,"")
         val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
-        if (checkInTime != null){
-            val date = formatDate.parse(checkInTime)
-            val calendar = Calendar.getInstance()
-            calendar.time = date
-            calendar.add(Calendar.HOUR, 9)
-            val fromTimeOff = formatDate.format(calendar.time)
-            etFromTimeReqOT.setText(fromTimeOff)
-
+        if (!checkInTime.isNullOrEmpty()){
+            try {
+                val date = formatDate.parse(checkInTime)
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+                calendar.add(Calendar.HOUR, 9)
+                val fromTimeOff = formatDate.format(calendar.time)
+                etFromTimeReqOT.setText(fromTimeOff)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         val checkOutTime = sharedPreferences.getString(SharePrefKeys.TIME_CHECKOUT.data,"")
-        etToTimeReqOT.setText(checkOutTime)
+        if (!checkInTime.isNullOrEmpty()){
+            etToTimeReqOT.setText(checkOutTime)
+        }
     }
 
 
@@ -117,6 +122,7 @@ class RequestOTFragment : Fragment() {
 
     fun checkedBreakFromTimeProcess(){
         val fromTimeInput = etFromTimeReqOT.text.toString()
+        if (fromTimeInput.isEmpty())return
         val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         val date = formatDate.parse(fromTimeInput)
         val calendar = Calendar.getInstance()
@@ -128,6 +134,7 @@ class RequestOTFragment : Fragment() {
 
     fun uncheckedBreakFromTimeProcess(){
         val fromTimeInput = etFromTimeReqOT.text.toString()
+        if (fromTimeInput.isEmpty())return
         val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         val date = formatDate.parse(fromTimeInput)
         val calendar = Calendar.getInstance()
@@ -139,6 +146,7 @@ class RequestOTFragment : Fragment() {
 
     fun checkedBreakToTimeProcess(){
         val toTimeInput = etToTimeReqOT.text.toString()
+        if (toTimeInput.isEmpty())return
         val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         val date = formatDate.parse(toTimeInput)
         val calendar = Calendar.getInstance()
@@ -150,6 +158,7 @@ class RequestOTFragment : Fragment() {
 
     fun uncheckedBreakToTimeProcess(){
         val toTimeInput = etToTimeReqOT.text.toString()
+        if (toTimeInput.isEmpty())return
         val formatDate = SimpleDateFormat(DateTimeFormat.TIME_PATTERN.format, Locale.getDefault())
         val date = formatDate.parse(toTimeInput)
         val calendar = Calendar.getInstance()
@@ -215,6 +224,7 @@ class RequestOTFragment : Fragment() {
         etFromTimeReqOT.text.clear()
         etToTimeReqOT.text.clear()
         etReason.text.clear()
+        checkBoxBreak.isChecked = false
     }
 
     fun handleCheckBoxBreak(){

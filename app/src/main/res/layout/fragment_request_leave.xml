@@ -36,9 +36,10 @@
 
         <Spinner
             android:id="@+id/spinnerLeaveType"
-            android:layout_width="220dp"
+            android:layout_width="242dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp" />
+            android:background="@drawable/spinner_style"
+            android:layout_marginLeft="3dp" />
 
 
     </LinearLayout>
@@ -107,7 +108,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
@@ -121,9 +122,10 @@
 
         <Spinner
             android:id="@+id/spinnerPeriod"
-            android:layout_width="220dp"
+            android:layout_width="242dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="65dp" />
+            android:background="@drawable/spinner_style"
+            android:layout_marginLeft="37dp" />
 
     </LinearLayout>
 

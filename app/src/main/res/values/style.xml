@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- res/values/styles.xml -->
+    <style name="AppPopupMenuStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:background">@drawable/custom_popup_bg</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>
