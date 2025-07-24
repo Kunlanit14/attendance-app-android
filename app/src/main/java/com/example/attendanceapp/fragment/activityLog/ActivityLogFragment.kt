@@ -38,7 +38,7 @@ class ActivityLogFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_activity_log, container, false)
 
-        tableActivities = view.findViewById(R.id.tbActivitiesLog)
+        tableActivities = view.findViewById(R.id.tbLayout)
 
         // Inflate the layout for this fragment
         return view
