@@ -2,6 +2,7 @@ package com.example.attendanceapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.SystemBarStyle
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         //Hamburger menu
         menuButton.setOnClickListener {
-            val popUpMenu = PopupMenu(this, menuButton)
+            val popUpMenu = PopupMenu(ContextThemeWrapper(this,R.style.AppPopupMenuStyle),menuButton)
             popUpMenu.menuInflater.inflate(R.menu.hamburger_menu, popUpMenu.menu)
             popUpMenu.setOnMenuItemClickListener { menuItem ->
                 when(menuItem.itemId){
