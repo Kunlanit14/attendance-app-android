@@ -24,18 +24,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:layout_marginStart="10dp"
         android:gravity="center_vertical"
-        android:background="@drawable/button_outline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvRequest"
         app:layout_constraintTop_toTopOf="parent">
 
         <Spinner
             android:id="@+id/spinnerRequestType"
-            android:layout_width="wrap_content"
+            android:layout_width="190dp"
             android:layout_height="40dp"
-            android:dropDownWidth="match_parent"/>
+            android:background="@drawable/button_outline"
+            android:dropDownWidth="match_parent" />
 
     </LinearLayout>
 

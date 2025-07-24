@@ -16,7 +16,7 @@
         <item>Private Leave (NP)</item>
         <item>Sick (P)</item>
         <item>Special Holiday (P)</item>
-        <item>Personal (P)</item>
+        <item>Personal Leave (P)</item>
     </string-array>
 
     <string-array name="Period">
