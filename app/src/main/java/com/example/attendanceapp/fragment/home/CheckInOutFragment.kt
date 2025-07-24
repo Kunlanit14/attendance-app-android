@@ -57,16 +57,15 @@ class CheckInOutFragment : Fragment() {
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        saveData()
-    }
+//    override fun onPause() {
+//        super.onPause()
+//        saveData()
+//    }
 
     override fun onResume() {
         super.onResume()
         retreiveData()
         handleButtonState()
-        handleRetrieveTimeChecked()
     }
 
     fun saveCheckIn(){
@@ -144,20 +143,20 @@ class CheckInOutFragment : Fragment() {
         }
     }
 
-    fun saveData(){
-
-        val currentTime : String = getCurrentTime()
-        sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-
-        timeCheckIn = currentTime
-        timeCheckOut = currentTime
-
-        sharedPreferences.edit {
-            putString(SharePrefKeys.TIME_CHECKIN.data, timeCheckIn)
-            putString(SharePrefKeys.TIME_CHECKOUT.data, timeCheckOut)
-        }
-
-    }
+//    fun saveData(){
+//
+//        val currentTime : String = getCurrentTime()
+//        sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
+//
+//        timeCheckIn = currentTime
+//        timeCheckOut = currentTime
+//
+//        sharedPreferences.edit {
+//            putString(SharePrefKeys.TIME_CHECKIN.data, timeCheckIn)
+//            putString(SharePrefKeys.TIME_CHECKOUT.data, timeCheckOut)
+//        }
+//
+//    }
 
     fun retreiveData(){
         sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
@@ -167,6 +166,7 @@ class CheckInOutFragment : Fragment() {
 
         checkIn.text = timeCheckIn
         checkOut.text = timeCheckOut
+        handleRetrieveTimeChecked()
 
     }
 
