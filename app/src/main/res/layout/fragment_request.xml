@@ -24,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:layout_marginStart="10dp"
         android:gravity="center_vertical"
         android:background="@drawable/button_outline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,9 +33,7 @@
 
         <Spinner
             android:id="@+id/spinnerRequestType"
-            android:layout_width="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:dropDownWidth="match_parent"/>
 
@@ -50,6 +49,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRequest">
 
-    </FrameLayout>
+        </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
