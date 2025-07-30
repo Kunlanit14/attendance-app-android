@@ -38,7 +38,6 @@ class CheckInOutFragment : Fragment(), lazyHrView {
     lateinit var checkIn : TextView
     lateinit var checkOut : TextView
     private lateinit var controller: LazyHrController
-    private lateinit var loadingIndicator: ProgressBar
 
     //Container stored pref
     var timeCheckIn: String? = null
@@ -195,7 +194,7 @@ class CheckInOutFragment : Fragment(), lazyHrView {
     }
 
     override fun showLoading(isLoading: Boolean) {
-        loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+//        loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
         checkInButton.isEnabled != isLoading
     }
 

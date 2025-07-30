@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -14,9 +15,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.attendanceapp.common.constant.DateTimeFormat
-import com.example.attendanceapp.fragment.activityLog.ActivityLogFragment
-import com.example.attendanceapp.fragment.home.CheckInOutFragment
-import com.example.attendanceapp.fragment.request.RequestFragment
+import com.example.attendanceapp.view.activityLog.ActivityLogFragment
+import com.example.attendanceapp.view.home.CheckInOutFragment
+import com.example.attendanceapp.view.request.RequestFragment
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var dateAndTime : TextView
     lateinit var menuButton : ImageView
+    private lateinit var loadingIndicator: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         dateAndTime = findViewById(R.id.dateAndTime)
         menuButton = findViewById(R.id.menuButton)
+        loadingIndicator  = findViewById(R.id.progress_bar)
 
         //get current date
         val simpleDateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
