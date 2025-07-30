@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         dateAndTime = findViewById(R.id.dateAndTime)
         menuButton = findViewById(R.id.menuButton)
-        loadingIndicator  = findViewById(R.id.progress_bar)
 
         //get current date
         val simpleDateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())

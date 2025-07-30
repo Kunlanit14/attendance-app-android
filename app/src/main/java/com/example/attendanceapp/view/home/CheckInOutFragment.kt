@@ -77,7 +77,6 @@ class CheckInOutFragment : Fragment(), lazyHrView {
 
     fun saveCheckIn(){
 
-        val currentDate : String = getCurrentDate()
         val currentTime : String = getCurrentTime()
 
         checkOutButton.visibility = View.GONE
@@ -103,29 +102,9 @@ class CheckInOutFragment : Fragment(), lazyHrView {
             checkOutButton.visibility = View.GONE
             checkInButton.visibility = View.VISIBLE
             saveButtonState(ButtonEnum.BUTTON_STATE_IN.state)
-            sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
 
-            val gson = Gson()
-            val jsonCheckOut = sharedPreferences.getString(ActivityLogKeyEnum.CHECK_OUT_LIST.key,null)
-            val typeCheckOut = object : TypeToken<MutableList<CheckOutData>>(){}.type
-            val checkOutdataList : MutableList<CheckOutData> = if (jsonCheckOut != null){
-                gson.fromJson(jsonCheckOut, typeCheckOut)
-            }else {
-                mutableListOf()
-            }
-
-            val newCheckOutData = CheckOutData(
-                checkOutTime = currentTimeCheckOut,
-                dateCheckOut = currentDate,
-                requestType = RequestTypeEnum.CHECK_OUT.type
-            )
-
-            checkOutdataList.add(newCheckOutData)
-
-            sharedPreferences.edit {
-                putString(SharePrefKeys.TIME_CHECKOUT.data, currentTimeCheckOut)
-                putString(ActivityLogKeyEnum.CHECK_OUT_LIST.key, gson.toJson(checkOutdataList))
-            }
+            controller.clockOutUser(userId)
+            controller.loadUserData(userId)
         }
     }
 
@@ -203,7 +182,11 @@ class CheckInOutFragment : Fragment(), lazyHrView {
     }
 
     override fun onClockInSuccess(clockInTime: Long?) {
-        Toast.makeText(requireContext(), "ลงเวลาเข้างานสำเร็จเวลา: $clockInTime", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Successfully clocked in at: $clockInTime", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClockOutSuccess(clockOutTime: Long?) {
+        Toast.makeText(requireContext(), "Successfully clocked out at: $clockOutTime", Toast.LENGTH_SHORT).show()
     }
 
     override fun displayUserData(user: User?) {

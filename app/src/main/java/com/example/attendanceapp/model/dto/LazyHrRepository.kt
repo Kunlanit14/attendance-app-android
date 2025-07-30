@@ -19,6 +19,14 @@ class LazyHrRepository {
         }
     }
 
+
+    suspend fun clockOut(userId : Long) : ApiResponse<Map<String, Any>>{
+        return withContext(Dispatchers.IO) {
+            apiService.clockOut(userId)
+        }
+    }
+
+
     suspend fun getUserById(userId: Long) : ApiResponse<User> {
         return withContext(Dispatchers.IO) {
             apiService.getUserById(userId)
