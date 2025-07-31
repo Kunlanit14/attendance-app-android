@@ -37,7 +37,6 @@ interface ApiService {
     @GET("api/attendance/history/{userId}")
     suspend fun getAttendanceHistory(@Path("userId") userId: Long): ApiResponse<List<Attendance>>
 
-
     //Leave
     @POST("api/leave/apply")
     suspend fun applyForLeave(@Body leaveRequestDto: LeaveRequestDto) : ApiResponse<LeaveRequestResponse>

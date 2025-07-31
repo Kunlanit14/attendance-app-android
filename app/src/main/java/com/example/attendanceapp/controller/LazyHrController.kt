@@ -93,26 +93,39 @@ open class LazyHrController(private val view: lazyHrView) {
         }
     }
 
-    fun applyForLeave(userId: Long, reason: String){
+    fun applyForLeave(leaveDto: LeaveRequestDto){
         controllerScope.launch {
             try {
-                val startTimestamp = System.currentTimeMillis()
-                val endTimestamp = startTimestamp + (2 * 24 * 60 * 60 *1000)
-
-                val leaveDto = LeaveRequestDto(
-                    userId = userId,
-                    leaveCategory = "ANNUAL",
-                    leavePeriod = "FULL_DAY",
-                    startDate = startTimestamp,
-                    endDate = endTimestamp,
-                    reason = reason
-                )
                 val response = repository.applyForLeave(leaveDto)
                 withContext(Dispatchers.Main){
                     if(response.status == "success") {
                         view.onLeaveApplicationSuccess(response.data)
                     } else {
                         view.onError("Leave application failed: ${response.message}")
+                    }
+                }
+            } catch (e: Exception){
+                withContext(Dispatchers.Main){
+                    view.onError("Network error: ${e.message}")
+                }
+            } finally {
+                withContext(Dispatchers.Main){
+                    view.showLoading(false)
+                }
+            }
+        }
+    }
+
+    fun loadUserLeave(userId: Long, reason: String){
+        controllerScope.launch {
+            try {
+                val response = repository.getUserLeaveResponse(userId)
+                withContext(Dispatchers.Main){
+                    if(response.status == "success") {
+                        val leaveList = response.data
+                        view.onLeaveDataLoaded(leaveList)
+                    } else {
+                        view.onError("Leave data load failed: ${response.message}")
                     }
                 }
             } catch (e: Exception){
