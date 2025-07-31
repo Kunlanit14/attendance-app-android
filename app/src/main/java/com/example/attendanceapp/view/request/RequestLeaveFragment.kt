@@ -95,7 +95,7 @@ class RequestLeaveFragment : Fragment() {
     }
 
     fun parsedDateFormat(dateString: String) : String {
-        val inputFormat = SimpleDateFormat(DateTimeFormat.PARSE_DATE_PATTERN.format, Locale.getDefault())
+        val inputFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.ENGLISH)
         val outputFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
 
         val date = inputFormat.parse(dateString)
