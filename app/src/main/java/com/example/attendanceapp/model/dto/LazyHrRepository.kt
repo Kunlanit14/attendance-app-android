@@ -5,6 +5,8 @@ import com.example.attendanceapp.model.apiService.ApiService
 import com.example.attendanceapp.model.dto.request.ApiResponse
 import com.example.attendanceapp.model.dto.request.User
 import com.example.attendanceapp.model.dto.request.Attendance
+import com.example.attendanceapp.model.dto.request.LeaveRequestDto
+import com.example.attendanceapp.model.dto.request.LeaveRequestResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -36,6 +38,12 @@ class LazyHrRepository {
     suspend fun getTodayAttendance(userId: Long) : ApiResponse<Attendance?>{
         return withContext(Dispatchers.IO) {
             apiService.getTodayAttendance(userId)
+        }
+    }
+
+    suspend fun applyForLeave(leaveRequestDto: LeaveRequestDto) : ApiResponse<LeaveRequestResponse> {
+        return withContext(Dispatchers.IO){
+            apiService.applyForLeave(leaveRequestDto)
         }
     }
 
