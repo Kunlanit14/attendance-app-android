@@ -13,11 +13,5 @@ enum class SharePrefKeys(val data : String) {
     SAVE_TIME("timeRequest"),
     SAVE_TIME_CHECKOUT("timeReqCheckOut"),
 
-    //Request Leave
-    LEAVE_TYPE("leaveType"),
-    FROM_DATE_LEAVE("fromDateLeave"),
-    TO_DATE_LEAVE("toDateLeave"),
-    PERIOD("period"),
-    REASON_LEAVE("reasonLeave"),
 
 }
