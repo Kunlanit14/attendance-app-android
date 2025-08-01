@@ -2,6 +2,7 @@ package com.example.attendanceapp.controller
 
 import android.util.Log
 import com.example.attendanceapp.model.dto.LazyHrRepository
+import com.example.attendanceapp.model.dto.request.LeaveRequestDto
 import com.example.attendanceapp.view.lazyHrView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -76,6 +77,7 @@ open class LazyHrController(private val view: lazyHrView) {
             view.showLoading(true)
             try {
                 val response = repository.getTodayAttendance(userId)
+                Log.d("API_RESPONSE", "getTodayAttendance: $response")
                 withContext(Dispatchers.Main) {
                     if (response.status =="success" ) {
                         view.showAttendance(response.data)
@@ -90,6 +92,30 @@ open class LazyHrController(private val view: lazyHrView) {
             }
         }
     }
+
+    fun applyForLeave(leaveDto: LeaveRequestDto){
+        controllerScope.launch {
+            try {
+                val response = repository.applyForLeave(leaveDto)
+                withContext(Dispatchers.Main){
+                    if(response.status == "success") {
+                        view.onLeaveApplicationSuccess(response.data)
+                    } else {
+                        view.onError("Leave application failed: ${response.message}")
+                    }
+                }
+            } catch (e: Exception){
+                withContext(Dispatchers.Main){
+                    view.onError("Network error: ${e.message}")
+                }
+            } finally {
+                withContext(Dispatchers.Main){
+                    view.showLoading(false)
+                }
+            }
+        }
+    }
+
 
     fun loadUserData(userId: Long){
         controllerScope.launch {

@@ -2,7 +2,10 @@ package com.example.attendanceapp.model.apiService
 
 import com.example.attendanceapp.model.dto.request.ApiResponse
 import com.example.attendanceapp.model.dto.request.Attendance
+import com.example.attendanceapp.model.dto.request.LeaveRequestDto
+import com.example.attendanceapp.model.dto.request.LeaveRequestResponse
 import com.example.attendanceapp.model.dto.request.User
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -33,4 +36,9 @@ interface ApiService {
 
     @GET("api/attendance/history/{userId}")
     suspend fun getAttendanceHistory(@Path("userId") userId: Long): ApiResponse<List<Attendance>>
+
+    //Leave
+    @POST("api/leave/apply")
+    suspend fun applyForLeave(@Body leaveRequestDto: LeaveRequestDto) : ApiResponse<LeaveRequestResponse>
+
 }

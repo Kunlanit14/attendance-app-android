@@ -23,6 +23,7 @@ import com.example.attendanceapp.components.CalendarPicker
 import com.example.attendanceapp.model.dto.data.RequestLeaveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -31,8 +32,15 @@ import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
 import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
+import com.example.attendanceapp.controller.LazyHrController
+import com.example.attendanceapp.model.dto.request.Attendance
+import com.example.attendanceapp.model.dto.request.LeaveRequestDto
+import com.example.attendanceapp.model.dto.request.LeaveRequestResponse
+import com.example.attendanceapp.model.dto.request.User
+import com.example.attendanceapp.view.lazyHrView
+import java.util.Calendar
 
-class RequestLeaveFragment : Fragment() {
+class RequestLeaveFragment : Fragment(), lazyHrView {
 
     lateinit var btnCalendarFromDate : ImageView
     lateinit var btnCalendarToDate : ImageView
@@ -43,7 +51,9 @@ class RequestLeaveFragment : Fragment() {
     lateinit var btnLeaveSave : Button
     lateinit var btnLeaveCancel : Button
     lateinit var etLeaveReason : EditText
-    lateinit var sharedPreferences : SharedPreferences
+
+    private lateinit var controller: LazyHrController
+    var userId : Long = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +82,8 @@ class RequestLeaveFragment : Fragment() {
         handleFromDateTextChanged()
         handleToDateTextChanged()
         handleReasonTextChanged()
+        controller = LazyHrController(this)
+
 
         // Inflate the layout for this fragment
         return view
@@ -92,16 +104,6 @@ class RequestLeaveFragment : Fragment() {
         }else{
             btnLeaveSave.setBackgroundResource(R.drawable.button_save_disable)
         }
-    }
-
-    fun parsedDateFormat(dateString: String) : String {
-        val inputFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.ENGLISH)
-        val outputFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
-
-        val date = inputFormat.parse(dateString)
-
-        return date?.let { outputFormat.format(it) }?: ""
-
     }
 
     fun handleCalendarFromDate(){
@@ -197,44 +199,41 @@ class RequestLeaveFragment : Fragment() {
         btnLeaveSave.setOnClickListener {
             Toast.makeText(requireContext(), getString(R.string.request_leave_toast), Toast.LENGTH_LONG).show()
 
-            //Date
-            val dateFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
-            val currentDate : String = dateFormat.format(Date())
+            val inputFormat = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.ENGLISH)
+            val startDate = inputFormat.parse(etFromDate.text.toString())?.time ?: 0
+            val endDate = inputFormat.parse(etToDate.text.toString())?.time ?: 0
 
-            val formattedFromDate = parsedDateFormat(etFromDate.text.toString())
-            val formattedToDate = parsedDateFormat(etToDate.text.toString())
-
-            sharedPreferences = requireActivity().getSharedPreferences(SharePrefKeys.SAVE_DATA.data, Context.MODE_PRIVATE)
-            val gson = Gson()
-            val json = sharedPreferences.getString(ActivityLogKeyEnum.REQUEST_LEAVE_LIST.key,null)
-            val type = object : TypeToken<MutableList<RequestLeaveData>>(){}.type
-            val requestLeaveDataList : MutableList<RequestLeaveData> = if (json != null) {
-                gson.fromJson(json, type)
-            } else {
-                mutableListOf()
+            if (startDate < System.currentTimeMillis()) {
+                return@setOnClickListener
             }
+            val leaveCategoryMap = mapOf(
+                RequestTypeEnum.SPN_ANNUAL.type to RequestTypeEnum.ANNUAL.type,
+                RequestTypeEnum.SPN_PRIVATE_LEAVE to RequestTypeEnum.PRIVATE_LEAVE.type,
+                RequestTypeEnum.SPN_SICK.type to RequestTypeEnum.SICK.type,
+                RequestTypeEnum.SPN_SPECIAL_HOLIDAY.type to RequestTypeEnum.SPECIAL_HOLIDAY.type,
+                RequestTypeEnum.SPN_PERSONAL_LEAVE.type to RequestTypeEnum.PERSONAL_LEAVE.type,
 
-            val newRequestLeaveData = RequestLeaveData(
-                currentDate = currentDate,
-                requestType = RequestTypeEnum.REQUEST_LEAVE.type,
-                leaveType = leaveTypeSpinner.selectedItem.toString(),
-                fromDate = formattedFromDate,
-                toDate = formattedToDate,
-                reasonLeave = etLeaveReason.text.toString(),
-                period = periodSpinner.selectedItem.toString()
             )
-            requestLeaveDataList.add(newRequestLeaveData)
 
+            val periodMap = mapOf(
+                RequestTypeEnum.SPN_AM.type to RequestTypeEnum.AM.type,
+                RequestTypeEnum.SPN_PM.type to RequestTypeEnum.PM.type,
+                RequestTypeEnum.SPN_FULL_DAY.type to RequestTypeEnum.FULL_DAY.type,
+            )
 
-            sharedPreferences.edit {
-                putString(ActivityLogKeyEnum.REQUEST_LEAVE_LIST.key, gson.toJson(requestLeaveDataList))
-                putString(SharePrefKeys.LEAVE_TYPE.data, leaveTypeSpinner.toString())
-                putString(SharePrefKeys.FROM_DATE_LEAVE.data, etFromDate.text.toString())
-                putString(SharePrefKeys.TO_DATE_LEAVE.data, etToDate.text.toString())
-                putString(SharePrefKeys.PERIOD.data, periodSpinner.toString())
-                putString(SharePrefKeys.REASON_LEAVE.data, etLeaveReason.text.toString())
-            }
+            val selectedLeaveCategory = leaveCategoryMap[leaveTypeSpinner.selectedItem.toString()] ?: ""
+            val selectedLeavePeriod = periodMap[periodSpinner.selectedItem.toString()] ?: ""
 
+            val newRequestLeaveData = LeaveRequestDto(
+                userId = userId,
+                leaveCategory = selectedLeaveCategory,
+                leavePeriod = selectedLeavePeriod,
+                startDate = startDate,
+                endDate = endDate,
+                reason = etLeaveReason.text.toString()
+            )
+
+            controller.applyForLeave(newRequestLeaveData)
             clearDataSaved()
 
         }
@@ -321,6 +320,29 @@ class RequestLeaveFragment : Fragment() {
             }
 
         })
+    }
+
+    override fun showLoading(isLoading: Boolean) {
+    }
+
+    override fun onError(message: String) {
+    }
+
+    override fun onClockInSuccess(clockInTime: Long?) {
+    }
+
+    override fun onClockOutSuccess(clockOutTime: Long?) {
+    }
+
+    override fun onLeaveApplicationSuccess(leaveRequest: LeaveRequestResponse?) {
+        Toast.makeText(requireContext(), "Leave submitted successfully with ID: ${leaveRequest?.id}", Toast.LENGTH_SHORT).show()
+    }
+
+
+    override fun displayUserData(user: User?) {
+    }
+
+    override fun showAttendance(attendance: Attendance?) {
     }
 
 

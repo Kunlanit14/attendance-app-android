@@ -27,6 +27,30 @@ data class Attendance(
     val breakDurationMinutes: Int? = 0
 )
 
+data class LeaveRequestDto(
+    val userId: Long,
+    val leaveCategory: String,
+    val leavePeriod: String,
+    val startDate: Long,
+    val endDate: Long,
+    val reason: String
+)
+
+data class LeaveRequestResponse(
+    val id: Long,
+    val userId: Long,
+    val leaveCategory: String,
+    val leavePeriod: String,
+    val startDate: Long,
+    val endDate: Long,
+    val reason: String,
+    val status: String,
+    val appliedDate: Long?,
+    val approvedDate: Long?,
+    val comments: String,
+    val totalDays: Double?
+)
+
 data class ApiResponse<T>(
     val status: String,
     val message: String,
