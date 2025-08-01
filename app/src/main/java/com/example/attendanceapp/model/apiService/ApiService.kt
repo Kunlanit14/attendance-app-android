@@ -41,6 +41,4 @@ interface ApiService {
     @POST("api/leave/apply")
     suspend fun applyForLeave(@Body leaveRequestDto: LeaveRequestDto) : ApiResponse<LeaveRequestResponse>
 
-    @GET("api/leave/user/{userId}")
-    suspend fun getUserLeaveResponse(@Path("userId") userId: Long) : ApiResponse<List<LeaveRequestResponse>>
 }
