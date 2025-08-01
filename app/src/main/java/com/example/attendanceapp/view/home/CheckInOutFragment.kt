@@ -141,9 +141,6 @@ class CheckInOutFragment : Fragment(), lazyHrView {
     }
 
     override fun onLeaveApplicationSuccess(leaveRequest: LeaveRequestResponse?) {}
-    override fun onLeaveDataLoaded(leaveList: List<LeaveRequestResponse>) {
-        TODO("Not yet implemented")
-    }
 
     override fun displayUserData(user: User?) {
     }
