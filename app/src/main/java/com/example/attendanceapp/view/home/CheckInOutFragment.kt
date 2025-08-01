@@ -52,8 +52,8 @@ class CheckInOutFragment : Fragment(), lazyHrView {
 
 
         controller = LazyHrController(this)
-        saveCheckIn()
-        saveCheckOut()
+        saveCheckInListener()
+        saveCheckOutListener()
         return view
 
     }
@@ -65,7 +65,7 @@ class CheckInOutFragment : Fragment(), lazyHrView {
         controller.loadTodayAttendance(userId)
     }
 
-    fun saveCheckIn(){
+    fun saveCheckInListener(){
 
         checkOutButton.visibility = View.GONE
         checkInButton.setOnClickListener {
@@ -80,7 +80,7 @@ class CheckInOutFragment : Fragment(), lazyHrView {
 
     }
 
-    fun saveCheckOut(){
+    fun saveCheckOutListener(){
 
         checkOutButton.setOnClickListener {
             val currentTimeCheckOut : String = getCurrentTime()

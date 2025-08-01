@@ -204,17 +204,21 @@ class RequestLeaveFragment : Fragment(), lazyHrView {
             val endDate = inputFormat.parse(etToDate.text.toString())?.time ?: 0
 
             if (startDate < System.currentTimeMillis()) {
-                Toast.makeText(requireContext(), "วันที่เริ่มต้นต้องไม่เป็นอดีต", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val leaveCategoryMap = mapOf(
-                "Annual (P)" to "ANNUAL",
-                "Private" to "PERSONAL"
+                RequestTypeEnum.SPN_ANNUAL.type to RequestTypeEnum.ANNUAL.type,
+                RequestTypeEnum.SPN_PRIVATE_LEAVE to RequestTypeEnum.PRIVATE_LEAVE.type,
+                RequestTypeEnum.SPN_SICK.type to RequestTypeEnum.SICK.type,
+                RequestTypeEnum.SPN_SPECIAL_HOLIDAY.type to RequestTypeEnum.SPECIAL_HOLIDAY.type,
+                RequestTypeEnum.SPN_PERSONAL_LEAVE.type to RequestTypeEnum.PERSONAL_LEAVE.type,
+
             )
 
             val periodMap = mapOf(
-                "Full Day" to "FULL_DAY",
-                "Half Day" to "HALF_DAY"
+                RequestTypeEnum.SPN_AM.type to RequestTypeEnum.AM.type,
+                RequestTypeEnum.SPN_PM.type to RequestTypeEnum.PM.type,
+                RequestTypeEnum.SPN_FULL_DAY.type to RequestTypeEnum.FULL_DAY.type,
             )
 
             val selectedLeaveCategory = leaveCategoryMap[leaveTypeSpinner.selectedItem.toString()] ?: ""
@@ -334,9 +338,6 @@ class RequestLeaveFragment : Fragment(), lazyHrView {
         Toast.makeText(requireContext(), "Leave submitted successfully with ID: ${leaveRequest?.id}", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onLeaveDataLoaded(leaveList: List<LeaveRequestResponse>) {
-
-    }
 
     override fun displayUserData(user: User?) {
     }
