@@ -116,29 +116,6 @@ open class LazyHrController(private val view: lazyHrView) {
         }
     }
 
-    fun loadUserLeave(userId: Long, reason: String){
-        controllerScope.launch {
-            try {
-                val response = repository.getUserLeaveResponse(userId)
-                withContext(Dispatchers.Main){
-                    if(response.status == "success") {
-                        val leaveList = response.data
-                        view.onLeaveDataLoaded(leaveList)
-                    } else {
-                        view.onError("Leave data load failed: ${response.message}")
-                    }
-                }
-            } catch (e: Exception){
-                withContext(Dispatchers.Main){
-                    view.onError("Network error: ${e.message}")
-                }
-            } finally {
-                withContext(Dispatchers.Main){
-                    view.showLoading(false)
-                }
-            }
-        }
-    }
 
     fun loadUserData(userId: Long){
         controllerScope.launch {
