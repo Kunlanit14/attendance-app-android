@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -181,7 +182,6 @@ class ActivityLogFragment : Fragment() {
 
         for ((index,logItem) in allLogItems.withIndex()) {
 
-
             val row = TableRow(requireContext())
             val oddColor = ContextCompat.getColor(requireContext(), R.color.tb_blue)
             val evenColor = ContextCompat.getColor(requireContext(), R.color.tb_light_blue)
@@ -208,6 +208,9 @@ class ActivityLogFragment : Fragment() {
             val detailTextView = TextView(requireContext())
             detailTextView.text = logItem.details
             detailTextView.textSize = 11.5f
+            detailTextView.setSingleLine(false)
+            detailTextView.ellipsize = null
+            detailTextView.layoutParams = TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT,1f)
             detailTextView.setTextColor(Color.BLACK)
             detailTextView.setPadding(0,10, 10, 10)
 
