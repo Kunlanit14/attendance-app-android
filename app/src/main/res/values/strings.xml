@@ -13,10 +13,9 @@
     <string-array name="LeaveType">
         <item />
         <item>Annual (P)</item>
-        <item>Private Leave (NP)</item>
         <item>Sick (P)</item>
         <item>Special Holiday (P)</item>
-        <item>Personal Leave (P)</item>
+        <item>Private Leave (NP)</item>
     </string-array>
 
     <string-array name="Period">

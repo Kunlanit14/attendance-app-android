@@ -17,20 +17,18 @@ enum class RequestTypeEnum(val type : String) {
 
 
     SPN_ANNUAL("Annual (P)"),
-    SPN_PRIVATE_LEAVE("Private Leave (NP)"),
     SPN_SICK("Sick (P)"),
     SPN_SPECIAL_HOLIDAY("Special Holiday (P)"),
-    SPN_PERSONAL_LEAVE("Personal Leave (P)"),
+    SPN_PRIVATE_LEAVE("Private Leave (NP)"),
 
     SPN_AM("AM"),
     SPN_PM("PM"),
     SPN_FULL_DAY("Full Day"),
 
     ANNUAL("ANNUAL"),
-    PRIVATE_LEAVE("PRIVATE"),
     SICK("SICK"),
     SPECIAL_HOLIDAY("SPECIAL_HOLIDAY"),
-    PERSONAL_LEAVE("PERSONAL_LEAVE"),
+    PRIVATE_LEAVE("PRIVATE"),
 
     AM("AM"),
     PM("PM"),

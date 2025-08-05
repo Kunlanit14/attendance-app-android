@@ -208,10 +208,9 @@ class RequestLeaveFragment : Fragment(), lazyHrView {
             }
             val leaveCategoryMap = mapOf(
                 RequestTypeEnum.SPN_ANNUAL.type to RequestTypeEnum.ANNUAL.type,
-                RequestTypeEnum.SPN_PRIVATE_LEAVE to RequestTypeEnum.PRIVATE_LEAVE.type,
                 RequestTypeEnum.SPN_SICK.type to RequestTypeEnum.SICK.type,
                 RequestTypeEnum.SPN_SPECIAL_HOLIDAY.type to RequestTypeEnum.SPECIAL_HOLIDAY.type,
-                RequestTypeEnum.SPN_PERSONAL_LEAVE.type to RequestTypeEnum.PERSONAL_LEAVE.type,
+                RequestTypeEnum.SPN_PRIVATE_LEAVE.type to RequestTypeEnum.PRIVATE_LEAVE.type,
 
             )
 
