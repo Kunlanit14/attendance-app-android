@@ -19,7 +19,7 @@
     </string-array>
 
     <string-array name="Period">
-        <item/>
+        <item />
         <item>AM</item>
         <item>PM</item>
         <item>Full Day</item>
