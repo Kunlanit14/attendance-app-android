@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var dateAndTime : TextView
     lateinit var menuButton : ImageView
-    private lateinit var loadingIndicator: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

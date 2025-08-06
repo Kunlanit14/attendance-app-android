@@ -1,6 +1,8 @@
 package com.example.attendanceapp.view.request
 
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -27,6 +29,7 @@ import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
 import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
+import com.example.attendanceapp.components.CustomCalendar
 import java.util.Locale
 
 open class RequestCheckInFragment : Fragment() {
@@ -105,10 +108,13 @@ open class RequestCheckInFragment : Fragment() {
 
     fun handleCalendar(){
         btnCalendar.setOnClickListener {
-            CalendarPicker.showDatePicker(requireContext()) {
-                    selectedDate ->
-                etDateRequestcheck.text = selectedDate
-            }
+//            CalendarPicker.showDatePicker(requireContext()) {
+//                    selectedDate ->
+//                etDateRequestcheck.text = selectedDate
+//            }
+            val intent = Intent(requireActivity(), CustomCalendar::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
+
         }
     }
 
