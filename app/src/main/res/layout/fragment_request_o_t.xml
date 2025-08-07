@@ -156,7 +156,7 @@
             android:id="@+id/btnSaveOT"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_save"
+            android:background="@drawable/button_save_disable"
             android:backgroundTint="@null"
             android:text="SAVE"
             android:textColor="@color/white" />
