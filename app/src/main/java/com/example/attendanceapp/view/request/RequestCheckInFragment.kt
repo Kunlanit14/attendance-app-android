@@ -108,10 +108,6 @@ open class RequestCheckInFragment : Fragment() {
 
     fun handleCalendar(){
         btnCalendar.setOnClickListener {
-//            CalendarPicker.showDatePicker(requireContext()) {
-//                    selectedDate ->
-//                etDateRequestcheck.text = selectedDate
-//            }
             val intent = Intent(requireActivity(), CustomCalendar::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
 

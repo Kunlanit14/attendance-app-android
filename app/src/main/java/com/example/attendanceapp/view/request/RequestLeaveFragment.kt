@@ -1,6 +1,8 @@
 package com.example.attendanceapp.view.request
 
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -32,6 +34,7 @@ import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
 import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
+import com.example.attendanceapp.components.CustomCalendar
 import com.example.attendanceapp.controller.LazyHrController
 import com.example.attendanceapp.model.dto.request.Attendance
 import com.example.attendanceapp.model.dto.request.LeaveRequestDto
@@ -108,19 +111,15 @@ class RequestLeaveFragment : Fragment(), lazyHrView {
 
     fun handleCalendarFromDate(){
         btnCalendarFromDate.setOnClickListener {
-            CalendarPicker.showDatePicker(requireContext()) {
-                    selectedDate ->
-                etFromDate.text = selectedDate
-            }
+            val intent = Intent(requireActivity(), CustomCalendar::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
         }
     }
 
     fun handleCalendarToDate(){
         btnCalendarToDate.setOnClickListener {
-            CalendarPicker.showDatePicker(requireContext()) {
-                    selectedDate ->
-                etToDate.text = selectedDate
-            }
+            val intent = Intent(requireActivity(), CustomCalendar::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
         }
     }
 

@@ -1,6 +1,8 @@
 package com.example.attendanceapp.view.request
 
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.icu.util.Calendar
 import android.os.Bundle
@@ -23,6 +25,7 @@ import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
 import com.example.attendanceapp.components.CalendarPicker
+import com.example.attendanceapp.components.CustomCalendar
 import com.example.attendanceapp.model.dto.data.RequestOTData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -170,10 +173,8 @@ class RequestOTFragment : Fragment() {
 
     fun handleCalendar(){
         btnCalendarOT.setOnClickListener {
-            CalendarPicker.showDatePicker(requireContext()) {
-                    selectedDate ->
-                etDateRequestOT.text = selectedDate
-            }
+            val intent = Intent(requireActivity(), CustomCalendar::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
         }
     }
 
