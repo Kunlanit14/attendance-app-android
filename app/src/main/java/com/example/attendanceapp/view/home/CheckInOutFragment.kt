@@ -129,7 +129,9 @@ class CheckInOutFragment : Fragment(), lazyHrView {
     }
 
     override fun onError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        context?.let {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onClockInSuccess(clockInTime: Long?) {

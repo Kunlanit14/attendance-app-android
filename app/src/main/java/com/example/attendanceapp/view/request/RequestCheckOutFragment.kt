@@ -1,6 +1,8 @@
 package com.example.attendanceapp.view.request
 
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -28,6 +30,7 @@ import androidx.core.content.edit
 import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.common.constant.RequestTypeEnum
 import com.example.attendanceapp.common.shareprefkeys.SharePrefKeys
+import com.example.attendanceapp.components.CustomCalendar
 
 class RequestCheckOutFragment : Fragment() {
 
@@ -108,6 +111,8 @@ class RequestCheckOutFragment : Fragment() {
                     selectedDate ->
                 etDateReqCheckOut.text = selectedDate
             }
+            val intent = Intent(requireActivity(), CustomCalendar::class.java)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
         }
     }
 
