@@ -61,7 +61,6 @@ class CustomCalendar : AppCompatActivity() {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
         for (month in 1..12) {
-
             val monthName = when(month) {
                 1 -> "January"
                 2 -> "February"
@@ -76,7 +75,6 @@ class CustomCalendar : AppCompatActivity() {
                 11 -> "November"
                 12 -> "December"
                 else -> ""
-
             }
             val days = mutableListOf<DayData>()
 
@@ -86,6 +84,15 @@ class CustomCalendar : AppCompatActivity() {
             cal.set(currentYear, month - 1, 1)
             //เดือนนี้มีกี่วัน
             val maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+            // วันที่เริ่มของเดือนนั้นๆ ตรงกับ วันอะไรใน week
+            // DAY_OF_WEEK -> เพื่อหาวันในสัปดาห์ ของวันที่ 1
+            val firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+            val offset = (firstDayOfWeek + 5) % 7
+            // คำนวณช่องว่างของวัน เพื่อให้เป็นวันแรกของเดือน
+
+            for (i in 0 until offset) {
+                days.add(DayData(dayNumber = 0, isToday = false))
+            }
 
             for (day in 1..maxDay) {
                 //Calendar.getInstance() == วันปัจจุบัน

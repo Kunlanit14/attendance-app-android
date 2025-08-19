@@ -1,5 +1,6 @@
 package com.example.attendanceapp.model.adapter
 
+import android.icu.util.Calendar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,11 +26,16 @@ class DayAdapter(private val days: List<DayData>) : RecyclerView.Adapter<DayAdap
         val day = days[position]
         holder.dayText.text = day.dayNumber.toString()
 
+        if(day.dayNumber == 0){
+            holder.dayText.text = "" // ช่องว่างก่อนวันที่ 1
+        }
+
         if(day.isToday) {
             holder.dayText.setBackgroundResource(R.drawable.calendar_today_marker)
         }else {
             holder.dayText.background = null
         }
+
     }
 
     override fun getItemCount(): Int {
