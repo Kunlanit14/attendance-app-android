@@ -1,5 +1,6 @@
 package com.example.attendanceapp.components
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.activity.SystemBarStyle
@@ -61,7 +62,6 @@ class CustomCalendar : AppCompatActivity() {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
         for (month in 1..12) {
-
             val monthName = when(month) {
                 1 -> "January"
                 2 -> "February"
@@ -76,7 +76,6 @@ class CustomCalendar : AppCompatActivity() {
                 11 -> "November"
                 12 -> "December"
                 else -> ""
-
             }
             val days = mutableListOf<DayData>()
 
@@ -86,19 +85,47 @@ class CustomCalendar : AppCompatActivity() {
             cal.set(currentYear, month - 1, 1)
             //เดือนนี้มีกี่วัน
             val maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+            // วันที่เริ่มของเดือนนั้นๆ ตรงกับ วันอะไรใน week
+            // DAY_OF_WEEK -> เพื่อหาวันในสัปดาห์ ของวันที่ 1
+            val firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+            //ใช้ offset เพื่อวางวันที่ 1 ของเดือน
+            val offset = (firstDayOfWeek + 5) % 7
+            // คำนวณช่องว่างของวัน เพื่อให้เป็นวันแรกของเดือน
+            for (i in 0 until offset) {
+                days.add(DayData(dayNumber = 0, isToday = false))
+            }
 
+            //เริ่มวันที่จริง
             for (day in 1..maxDay) {
+                cal.set(currentYear, month - 1, day)
+                val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
                 //Calendar.getInstance() == วันปัจจุบัน
                  val isToday = (day == Calendar.getInstance().get(Calendar.DAY_OF_MONTH) &&
                         month == Calendar.getInstance().get(Calendar.MONTH) + 1)
 
+                //Weekend Colors
+                val isWeekend = (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY)
+
                 days.add(
                     DayData(
                         dayNumber = day,
-                        isToday = isToday
+                        isToday = isToday,
+                        isWeekend = isWeekend
                     )
                 )
             }
+
+            //Initial Screen when no select the date
+            val anySelected = days.any() {it.isSelected}
+            if (!anySelected){
+                days.forEach { day ->
+                    if (day.isToday){
+                        day.isSelected = true
+                    }
+                }
+            }
+
+
 
             months.add(
                 MonthData(
