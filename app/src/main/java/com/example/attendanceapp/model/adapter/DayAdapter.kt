@@ -1,5 +1,6 @@
 package com.example.attendanceapp.model.adapter
 
+import android.graphics.Color
 import android.icu.util.Calendar
 import android.view.LayoutInflater
 import android.view.View
@@ -23,17 +24,52 @@ class DayAdapter(private val days: List<DayData>) : RecyclerView.Adapter<DayAdap
     }
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
-        val day = days[position]
+        var day = days[position]
         holder.dayText.text = day.dayNumber.toString()
 
         if(day.dayNumber == 0){
             holder.dayText.text = "" // ช่องว่างก่อนวันที่ 1
         }
 
-        if(day.isToday) {
-            holder.dayText.setBackgroundResource(R.drawable.calendar_today_marker)
+        if(day.isWeekend) {
+            holder.dayText.setTextColor(Color.GRAY)
         }else {
-            holder.dayText.background = null
+            holder.dayText.setTextColor(Color.BLACK)
+        }
+
+        if (day.dayNumber != 0) {
+            when {
+                day.isToday && day.isSelected -> {
+                    holder.dayText.setBackgroundResource(R.drawable.bg_today_selected)
+                    holder.dayText.setTextColor(Color.WHITE)
+                }
+
+                day.isToday -> {
+                    holder.dayText.setBackgroundResource(R.drawable.calendar_select_marker_btn)
+                }
+
+                day.isSelected -> {
+                    holder.dayText.setBackgroundResource(R.drawable.calendar_today_marker)
+                    holder.dayText.setTextColor(Color.WHITE)
+                }
+
+                else -> {
+                    holder.dayText.background = null
+                }
+            }
+
+        }
+
+        //Selected date
+        holder.dayText.setOnClickListener {
+            //Clear selected date -> for select 1 only
+            days.forEach {
+                it.isSelected = false
+            }
+            day.isSelected = true
+
+            notifyDataSetChanged()
+
         }
 
     }

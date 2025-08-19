@@ -5,6 +5,5 @@
     android:layout_height="90dp"
     android:gravity="center"
     android:textSize="17sp"
-    android:background="@drawable/calendar_today_marker"
     android:layout_marginEnd="2dp">
 </TextView>

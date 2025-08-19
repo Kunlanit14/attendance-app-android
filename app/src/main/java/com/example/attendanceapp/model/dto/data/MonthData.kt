@@ -9,5 +9,6 @@ data class MonthData(
 data class DayData(
     val dayNumber: Int,
     val isToday: Boolean = false,
-    val isHoliday: Boolean = false
+    var isSelected: Boolean = false,
+    val isWeekend: Boolean = false
 )
