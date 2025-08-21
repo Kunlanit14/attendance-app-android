@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.attendanceapp.R
-import com.example.attendanceapp.components.DayDividerDecoration
+import com.example.attendanceapp.components.MonthDayDividerDecoration
 import com.example.attendanceapp.model.dto.data.MonthData
 
 //รับข้อมูลเป็น List<MonthData>(ข้อมูลที่เตรียมไว้)
@@ -48,7 +48,7 @@ class MonthAdapter(private val months: List<MonthData>,
                 onDateSelected(selectDate)
             }
         )
-        holder.daysRecyclerView.addItemDecoration(DayDividerDecoration())
+        holder.daysRecyclerView.addItemDecoration(MonthDayDividerDecoration())
     }
 
     override fun getItemCount(): Int {

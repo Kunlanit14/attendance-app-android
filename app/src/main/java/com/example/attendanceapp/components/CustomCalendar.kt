@@ -1,14 +1,11 @@
 package com.example.attendanceapp.components
-
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -57,6 +54,7 @@ class CustomCalendar : AppCompatActivity() {
 
     fun onPressBackListener(){
         backBtn.setOnClickListener {
+            finish()
 
         }
     }

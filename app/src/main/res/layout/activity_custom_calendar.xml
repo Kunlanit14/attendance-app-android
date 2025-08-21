@@ -31,8 +31,9 @@
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_marginStart="9dp"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/back_btn_icon_nm" />
+                android:focusable="true"
+                android:clickable="true"
+                android:src="@drawable/back_button_selector" />
 
 
             <TextView

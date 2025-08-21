@@ -16,12 +16,9 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.attendanceapp.R
 import com.example.attendanceapp.common.constant.ButtonEnum
-import com.example.attendanceapp.components.CalendarPicker
 import com.example.attendanceapp.model.dto.data.RequestCheckInData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
