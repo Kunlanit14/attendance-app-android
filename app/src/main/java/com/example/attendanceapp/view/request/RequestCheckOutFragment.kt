@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.attendanceapp.R
 import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
 import com.example.attendanceapp.common.constant.ButtonEnum
@@ -73,6 +74,15 @@ class RequestCheckOutFragment : Fragment() {
         saveRequestTimeCheckOut()
     }
 
+    private val calendarLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if(result.resultCode == android.app.Activity.RESULT_OK) {
+            val date = result.data?.getStringExtra("selectDate")
+            etDateReqCheckOut.text = date ?: ""
+        }
+    }
+
     fun updateButtonStateReqCheckOut(){
         val dateReqCheckOutInput = etDateReqCheckOut.text.toString().trim()
         val timeReqCheckOutInput = etTimeReqCheckout.text.toString().trim()
@@ -107,12 +117,8 @@ class RequestCheckOutFragment : Fragment() {
 
     fun handleCalendar(){
         btnCalendar.setOnClickListener {
-            CalendarPicker.showDatePicker(requireContext()) {
-                    selectedDate ->
-                etDateReqCheckOut.text = selectedDate
-            }
             val intent = Intent(requireActivity(), CustomCalendar::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
+            calendarLauncher.launch(intent)
         }
     }
 

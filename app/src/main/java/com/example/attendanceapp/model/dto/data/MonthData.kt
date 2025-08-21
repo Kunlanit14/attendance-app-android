@@ -3,6 +3,7 @@ package com.example.attendanceapp.model.dto.data
 data class MonthData(
     val monthNumber: Int,
     val monthName : String,
+    val year: String,
     val days: List<DayData>
 )
 

@@ -1,21 +1,28 @@
 package com.example.attendanceapp.components
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.attendanceapp.R
+import com.example.attendanceapp.common.constant.DateTimeFormat
 import com.example.attendanceapp.model.adapter.MonthAdapter
 import com.example.attendanceapp.model.dto.data.DayData
 import com.example.attendanceapp.model.dto.data.MonthData
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class CustomCalendar : AppCompatActivity() {
 
@@ -23,6 +30,9 @@ class CustomCalendar : AppCompatActivity() {
     lateinit var monthRecyclerView: RecyclerView
     lateinit var monthAdapter: MonthAdapter
     lateinit var monthList: List<MonthData>
+    lateinit var doneBtn : Button
+
+    private var selectDate : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,22 +46,45 @@ class CustomCalendar : AppCompatActivity() {
         initView()
         setUpRecyclerView()
         onPressBackListener()
+        onPressDoneListener()
     }
 
     fun initView(){
         backBtn = findViewById(R.id.imgBack)
         monthRecyclerView = findViewById(R.id.monthRecyclerView)
+        doneBtn = findViewById(R.id.doneButton)
     }
 
     fun onPressBackListener(){
         backBtn.setOnClickListener {
+
+        }
+    }
+
+    fun onPressDoneListener(){
+        doneBtn.setOnClickListener {
+            // รูปแบบของ selectDate ปัจจุบัน
+            val input = SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault())
+            // แปลง String -> Date
+            val date: Date = input.parse(selectDate) ?: Date()
+
+            // ใช้ format เดียวกับ RequestCheckIn
+            val sdfOutput = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
+            val formattedDate = sdfOutput.format(date)
+
+
+            val intent = intent
+            intent.putExtra("selectDate",formattedDate)
+            setResult(RESULT_OK, intent)
             finish()
         }
     }
 
     private fun setUpRecyclerView() {
         monthList = generateCalendarData()
-        monthAdapter = MonthAdapter(monthList)
+        monthAdapter = MonthAdapter(monthList) { date ->
+            selectDate = date
+        }
         monthRecyclerView.adapter = monthAdapter
         monthRecyclerView.layoutManager = LinearLayoutManager(this)
     }
@@ -131,8 +164,8 @@ class CustomCalendar : AppCompatActivity() {
                 MonthData(
                     monthNumber = month,
                     monthName = monthName,
-                    days = days
-
+                    days = days,
+                    year = currentYear.toString()
                 )
             )
         }

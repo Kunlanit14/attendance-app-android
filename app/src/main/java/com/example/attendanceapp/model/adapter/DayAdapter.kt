@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.attendanceapp.R
 import com.example.attendanceapp.model.dto.data.DayData
 
-class DayAdapter(private val days: List<DayData>) : RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
+class DayAdapter(private val days: List<DayData>,
+    private val monthName: String,
+    private val year: String,
+    private val onDateSelected: (String) -> Unit) : RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
 
     inner class DayViewHolder(view : View) : RecyclerView.ViewHolder(view){
         val dayText: TextView = view.findViewById(R.id.dayText)
@@ -67,6 +70,9 @@ class DayAdapter(private val days: List<DayData>) : RecyclerView.Adapter<DayAdap
                 it.isSelected = false
             }
             day.isSelected = true
+
+            val selectedDate = "${day.dayNumber} $monthName, $year"
+            onDateSelected(selectedDate)
 
             notifyDataSetChanged()
 
