@@ -3,10 +3,12 @@ package com.example.attendanceapp.components
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class DayDividerDecoration(
-    private val dividerSize: Int = 1,
+class MonthDayDividerDecoration(
+    private val dividerSize: Int = 2,
     private val dividerColor: Int = Color.LTGRAY
     ) : RecyclerView.ItemDecoration() {
 
@@ -20,13 +22,22 @@ class DayDividerDecoration(
 
         for (i in 0 until childCount){
             val child = parent.getChildAt(i)
-            val params = child.layoutParams as RecyclerView.LayoutParams
 
             //Horizontal line
-            val top = child.bottom + params.bottomMargin
+            val top = child.bottom.toFloat()
             val bottom = top + dividerSize
-            c.drawRect(parent.left.toFloat(),top.toFloat(),parent.right.toFloat(),bottom.toFloat(),paint)
+            c.drawRect(0f,top,parent.width.toFloat(),bottom,paint)
         }
+    }
+
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        super.getItemOffsets(outRect, view, parent, state)
+        outRect.bottom = dividerSize
     }
 
 }

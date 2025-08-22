@@ -26,6 +26,7 @@ import com.example.attendanceapp.model.dto.data.RequestLeaveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -56,6 +57,8 @@ class RequestLeaveFragment : Fragment(), lazyHrView {
     lateinit var etLeaveReason : EditText
 
     private lateinit var controller: LazyHrController
+
+    private var isSelectingFromDate = true
     var userId : Long = 1
 
     override fun onCreateView(
@@ -92,6 +95,19 @@ class RequestLeaveFragment : Fragment(), lazyHrView {
         return view
     }
 
+    private val calendarLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if(result.resultCode == android.app.Activity.RESULT_OK) {
+            val date = result.data?.getStringExtra("selectDate") ?: return@registerForActivityResult
+            if (isSelectingFromDate){
+                etFromDate.text = date
+            } else {
+                etToDate.text = date
+            }
+        }
+    }
+
     fun updateButtonStateLeave(){
         val selectedLeaveType = leaveTypeSpinner.isNotEmpty()
         val selectedPeriodType = periodSpinner.isNotEmpty()
@@ -111,15 +127,17 @@ class RequestLeaveFragment : Fragment(), lazyHrView {
 
     fun handleCalendarFromDate(){
         btnCalendarFromDate.setOnClickListener {
+            isSelectingFromDate = true
             val intent = Intent(requireActivity(), CustomCalendar::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
+            calendarLauncher.launch(intent)
         }
     }
 
     fun handleCalendarToDate(){
         btnCalendarToDate.setOnClickListener {
+            isSelectingFromDate = false
             val intent = Intent(requireActivity(), CustomCalendar::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
+            calendarLauncher.launch(intent)
         }
     }
 
