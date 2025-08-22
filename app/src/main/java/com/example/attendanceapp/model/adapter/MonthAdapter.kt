@@ -44,11 +44,20 @@ class MonthAdapter(private val months: List<MonthData>,
             monthData.days,
             monthName = monthData.monthName,
             year = monthData.year,
-            onDateSelected = {selectDate ->
+            onDateSelected = { selectDate, selectDay ->
+                months.forEach { m ->
+                    m.days.forEach { it.isSelected = false }
+                }
+
+                selectDay.isSelected = true
+                notifyDataSetChanged()
                 onDateSelected(selectDate)
             }
         )
-        holder.daysRecyclerView.addItemDecoration(MonthDayDividerDecoration())
+
+        if (holder.daysRecyclerView.itemDecorationCount == 0) {
+            holder.daysRecyclerView.addItemDecoration(MonthDayDividerDecoration())
+        }
     }
 
     override fun getItemCount(): Int {
