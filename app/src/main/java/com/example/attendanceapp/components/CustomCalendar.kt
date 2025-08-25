@@ -67,8 +67,8 @@ class CustomCalendar : AppCompatActivity() {
             val date: Date = input.parse(selectDate) ?: Date()
 
             // ใช้ format เดียวกับ RequestCheckIn
-            val sdfOutput = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
-            val formattedDate = sdfOutput.format(date)
+            val output = SimpleDateFormat(DateTimeFormat.DATE_PATTERN.format, Locale.getDefault())
+            val formattedDate = output.format(date)
 
 
             val intent = intent
@@ -79,94 +79,124 @@ class CustomCalendar : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView() {
-        monthList = generateCalendarData()
+        monthList = generateCalendarData(rangeYears = 10)
         monthAdapter = MonthAdapter(monthList) { date ->
             selectDate = date
         }
         monthRecyclerView.adapter = monthAdapter
-        monthRecyclerView.layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
+        monthRecyclerView.layoutManager = layoutManager
+
+
+        //Slide to present day
+        val today = Calendar.getInstance()
+        val curYear = today.get(Calendar.YEAR)
+        val curMonth = today.get(Calendar.MONTH) + 1
+
+        val currentIndex = monthList.indexOfFirst {
+            it.year.toInt() == curYear && it.monthNumber == curMonth
+        }
+        if (currentIndex != -1) {
+            monthRecyclerView.post {
+                layoutManager.scrollToPositionWithOffset(currentIndex,0)
+            }
+        }
+
     }
 
-    private fun generateCalendarData(): List<MonthData> {
+    private fun generateCalendarData(rangeYears: Int = 10): List<MonthData> {
         val months = mutableListOf<MonthData>()
         //ปีปัจจุบันเป็น object
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        //วันที่ปัจจุบันจริงๆ
+        val cal = Calendar.getInstance()
 
-        for (month in 1..12) {
-            val monthName = when(month) {
-                1 -> "January"
-                2 -> "February"
-                3 -> "March"
-                4 -> "April"
-                5 -> "May"
-                6 -> "June"
-                7 -> "July"
-                8 -> "August"
-                9 -> "September"
-                10 -> "October"
-                11 -> "November"
-                12 -> "December"
-                else -> ""
-            }
-            val days = mutableListOf<DayData>()
+        val todayYear = cal.get(Calendar.YEAR)
+        val todayMonth = cal.get(Calendar.MONTH) + 1
+        val todayDay = cal.get(Calendar.DAY_OF_MONTH)
 
-            //วันที่ปัจจุบัน
-            val cal = Calendar.getInstance()
-            //เปลี่ยน cal เป็นวันที่ 1 ของเดือนนั้น
-            cal.set(currentYear, month - 1, 1)
-            //เดือนนี้มีกี่วัน
-            val maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-            // วันที่เริ่มของเดือนนั้นๆ ตรงกับ วันอะไรใน week
-            // DAY_OF_WEEK -> เพื่อหาวันในสัปดาห์ ของวันที่ 1
-            val firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
-            //ใช้ offset เพื่อวางวันที่ 1 ของเดือน
-            val offset = (firstDayOfWeek + 5) % 7
-            // คำนวณช่องว่างของวัน เพื่อให้เป็นวันแรกของเดือน
-            for (i in 0 until offset) {
-                days.add(DayData(dayNumber = 0, isToday = false))
-            }
+        //ช่วงของปีก่อน 10 ปี ถึง หลัง 10 ปี
+        val startYear = todayYear - rangeYears
+        val endYear = todayYear + rangeYears
 
-            //เริ่มวันที่จริง
-            for (day in 1..maxDay) {
-                cal.set(currentYear, month - 1, day)
-                val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
-                //Calendar.getInstance() == วันปัจจุบัน
-                 val isToday = (day == Calendar.getInstance().get(Calendar.DAY_OF_MONTH) &&
-                        month == Calendar.getInstance().get(Calendar.MONTH) + 1)
+        for (year in startYear..endYear) {
+            val startMonthRange = if(year == startYear) todayMonth else 1
+            val endMonthRange = if (year == endYear) todayMonth else 12
 
-                //Weekend Colors
-                val isWeekend = (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY)
+            for (month in startMonthRange..endMonthRange) {
+                val monthName = when(month) {
+                    1 -> "January"
+                    2 -> "February"
+                    3 -> "March"
+                    4 -> "April"
+                    5 -> "May"
+                    6 -> "June"
+                    7 -> "July"
+                    8 -> "August"
+                    9 -> "September"
+                    10 -> "October"
+                    11 -> "November"
+                    12 -> "December"
+                    else -> ""
+                }
+                val days = mutableListOf<DayData>()
 
-                days.add(
-                    DayData(
-                        dayNumber = day,
-                        isToday = isToday,
-                        isWeekend = isWeekend
+                //ตั้งให้ cal เป็นวันที่ 1 ของเดือนนั้นๆ ในปีนั้นๆ
+                cal.set(year, month - 1, 1)
+                //เดือนนี้มีกี่วัน
+                val maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+                // วันที่เริ่มของเดือนนั้นๆ ตรงกับ วันอะไรใน week
+                // DAY_OF_WEEK -> เพื่อหาวันในสัปดาห์ ของวันที่ 1
+                val firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+                //ใช้ offset เพื่อวางวันที่ 1 ของเดือน
+                // offset เพื่อให้สัปดาห์เริ่มต้นที่วันจันทร์ Monday -> Sunday
+                val offset = (firstDayOfWeek + 5) % 7
+                // คำนวณช่องว่างของวัน ก่อนวันที่ 1
+                for (i in 0 until offset) {
+                    days.add(DayData(dayNumber = 0, isToday = false))
+                }
+
+                //เริ่มวันที่จริงทั้งหมด
+                for (day in 1..maxDay) {
+                    cal.set(year, month - 1, day)
+                    val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+                    //Calendar.getInstance() == วันปัจจุบัน
+                    val isToday = (day == todayDay && month == todayMonth && year == todayYear)
+
+                    //Weekend Colors
+                    val isWeekend = (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY)
+
+                    days.add(
+                        DayData(
+                            dayNumber = day,
+                            isToday = isToday,
+                            isWeekend = isWeekend
+                        )
+                    )
+                }
+
+                //Initial Screen when no select the date
+                val anySelected = days.any() {it.isSelected}
+                if (!anySelected){
+                    days.forEach { day ->
+                        if (day.isToday){
+                            day.isSelected = true
+                        }
+                    }
+                }
+
+
+
+                months.add(
+                    MonthData(
+                        monthNumber = month,
+                        monthName = monthName,
+                        days = days,
+                        year = year.toString()
                     )
                 )
             }
-
-            //Initial Screen when no select the date
-            val anySelected = days.any() {it.isSelected}
-            if (!anySelected){
-                days.forEach { day ->
-                    if (day.isToday){
-                        day.isSelected = true
-                    }
-                }
-            }
-
-
-
-            months.add(
-                MonthData(
-                    monthNumber = month,
-                    monthName = monthName,
-                    days = days,
-                    year = currentYear.toString()
-                )
-            )
         }
+
 
         return months
     }

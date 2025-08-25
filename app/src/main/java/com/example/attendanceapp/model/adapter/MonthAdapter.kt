@@ -37,7 +37,7 @@ class MonthAdapter(private val months: List<MonthData>,
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
         val monthData = months[position]
 
-        holder.monthHeader.text = monthData.monthName.toString()
+        holder.monthHeader.text = "${monthData.monthName} ${monthData.year}"
 
         holder.daysRecyclerView.layoutManager = GridLayoutManager(holder.itemView.context, 7)
         holder.daysRecyclerView.adapter = DayAdapter(
