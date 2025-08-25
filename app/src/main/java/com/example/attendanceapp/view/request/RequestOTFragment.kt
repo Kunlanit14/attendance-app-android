@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.edit
 import com.example.attendanceapp.R
 import com.example.attendanceapp.common.constant.ActivityLogKeyEnum
@@ -98,6 +99,15 @@ class RequestOTFragment : Fragment() {
         }
     }
 
+    private val calendarLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if(result.resultCode == android.app.Activity.RESULT_OK) {
+            val date = result.data?.getStringExtra("selectDate")
+            etDateRequestOT.text = date ?: ""
+        }
+    }
+
 
     fun updateButtonStateReqOT(){
         val dateReqOT = etDateRequestOT.text.toString().trim()
@@ -174,7 +184,7 @@ class RequestOTFragment : Fragment() {
     fun handleCalendar(){
         btnCalendarOT.setOnClickListener {
             val intent = Intent(requireActivity(), CustomCalendar::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(requireActivity()).toBundle())
+            calendarLauncher.launch(intent)
         }
     }
 

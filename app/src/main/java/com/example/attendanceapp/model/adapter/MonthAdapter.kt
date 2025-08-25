@@ -7,13 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.attendanceapp.R
-import com.example.attendanceapp.components.DayDividerDecoration
+import com.example.attendanceapp.components.MonthDayDividerDecoration
 import com.example.attendanceapp.model.dto.data.MonthData
 
 //รับข้อมูลเป็น List<MonthData>(ข้อมูลที่เตรียมไว้)
 //Adapter = ตัวกลางแปลงข้อมูลจากแหล่งข้อมูล MonthData : List ให้เป็นรูปแบบที่ RecyclerView สามารถแสดงผลได้
 //หรือการแปลงข้อมูลให้กลายเป็น view ของแต่ละแถวหรือช่อง เพื่อทำให้ RecyclerView แสดงออกมา
-class MonthAdapter(private val months: List<MonthData>) : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>(){
+class MonthAdapter(private val months: List<MonthData>,
+    private val onDateSelected: (String) -> Unit) : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>(){
 
     //จัดการเดือน 1เดือน(Viewของ 1 เดือน)
     inner class MonthViewHolder(view : View) : RecyclerView.ViewHolder(view){
@@ -36,11 +37,27 @@ class MonthAdapter(private val months: List<MonthData>) : RecyclerView.Adapter<M
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
         val monthData = months[position]
 
-        holder.monthHeader.text = monthData.monthName.toString()
+        holder.monthHeader.text = "${monthData.monthName} ${monthData.year}"
 
         holder.daysRecyclerView.layoutManager = GridLayoutManager(holder.itemView.context, 7)
-        holder.daysRecyclerView.adapter = DayAdapter(monthData.days)
-        holder.daysRecyclerView.addItemDecoration(DayDividerDecoration())
+        holder.daysRecyclerView.adapter = DayAdapter(
+            monthData.days,
+            monthName = monthData.monthName,
+            year = monthData.year,
+            onDateSelected = { selectDate, selectDay ->
+                months.forEach { m ->
+                    m.days.forEach { it.isSelected = false }
+                }
+
+                selectDay.isSelected = true
+                notifyDataSetChanged()
+                onDateSelected(selectDate)
+            }
+        )
+
+        if (holder.daysRecyclerView.itemDecorationCount == 0) {
+            holder.daysRecyclerView.addItemDecoration(MonthDayDividerDecoration())
+        }
     }
 
     override fun getItemCount(): Int {
