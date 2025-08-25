@@ -13,7 +13,7 @@ import com.example.attendanceapp.model.dto.data.DayData
 class DayAdapter(private val days: List<DayData>,
     private val monthName: String,
     private val year: String,
-    private val onDateSelected: (String) -> Unit) : RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
+    private val onDateSelected: (String, DayData) -> Unit) : RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
 
     inner class DayViewHolder(view : View) : RecyclerView.ViewHolder(view){
         val dayText: TextView = view.findViewById(R.id.dayText)
@@ -32,6 +32,7 @@ class DayAdapter(private val days: List<DayData>,
 
         if(day.dayNumber == 0){
             holder.dayText.text = "" // ช่องว่างก่อนวันที่ 1
+            holder.dayText.background = null
         }
 
         if(day.isWeekend) {
@@ -61,21 +62,21 @@ class DayAdapter(private val days: List<DayData>,
                 }
             }
 
-        }
+            //Selected date
+            holder.dayText.setOnClickListener {
+                //Clear selected date -> for select 1 only
+                days.forEach {
+                    it.isSelected = false
+                }
+                day.isSelected = true
 
-        //Selected date
-        holder.dayText.setOnClickListener {
-            //Clear selected date -> for select 1 only
-            days.forEach {
-                it.isSelected = false
+                val selectedDate = "${day.dayNumber} $monthName, $year"
+                notifyDataSetChanged()
+                onDateSelected(selectedDate,day)
+
             }
-            day.isSelected = true
-
-            val selectedDate = "${day.dayNumber} $monthName, $year"
-            onDateSelected(selectedDate)
-
-            notifyDataSetChanged()
-
+        } else {
+           holder.dayText.setOnClickListener(null)
         }
 
     }

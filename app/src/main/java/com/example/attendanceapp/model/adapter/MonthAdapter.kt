@@ -37,18 +37,27 @@ class MonthAdapter(private val months: List<MonthData>,
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
         val monthData = months[position]
 
-        holder.monthHeader.text = monthData.monthName.toString()
+        holder.monthHeader.text = "${monthData.monthName} ${monthData.year}"
 
         holder.daysRecyclerView.layoutManager = GridLayoutManager(holder.itemView.context, 7)
         holder.daysRecyclerView.adapter = DayAdapter(
             monthData.days,
             monthName = monthData.monthName,
             year = monthData.year,
-            onDateSelected = {selectDate ->
+            onDateSelected = { selectDate, selectDay ->
+                months.forEach { m ->
+                    m.days.forEach { it.isSelected = false }
+                }
+
+                selectDay.isSelected = true
+                notifyDataSetChanged()
                 onDateSelected(selectDate)
             }
         )
-        holder.daysRecyclerView.addItemDecoration(MonthDayDividerDecoration())
+
+        if (holder.daysRecyclerView.itemDecorationCount == 0) {
+            holder.daysRecyclerView.addItemDecoration(MonthDayDividerDecoration())
+        }
     }
 
     override fun getItemCount(): Int {
