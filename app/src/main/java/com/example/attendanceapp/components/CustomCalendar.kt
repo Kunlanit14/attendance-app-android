@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.attendanceapp.R
 import com.example.attendanceapp.common.constant.DateTimeFormat
+import com.example.attendanceapp.common.constant.MonthEnum
 import com.example.attendanceapp.model.adapter.MonthAdapter
 import com.example.attendanceapp.model.dto.data.DayData
 import com.example.attendanceapp.model.dto.data.MonthData
@@ -62,7 +63,7 @@ class CustomCalendar : AppCompatActivity() {
     fun onPressDoneListener(){
         doneBtn.setOnClickListener {
             // รูปแบบของ selectDate ปัจจุบัน
-            val input = SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault())
+            val input = SimpleDateFormat(DateTimeFormat.CALENDAR_INPUT.format, Locale.getDefault())
             // แปลง String -> Date
             val date: Date = input.parse(selectDate) ?: Date()
 
@@ -124,18 +125,18 @@ class CustomCalendar : AppCompatActivity() {
 
             for (month in startMonthRange..endMonthRange) {
                 val monthName = when(month) {
-                    1 -> "January"
-                    2 -> "February"
-                    3 -> "March"
-                    4 -> "April"
-                    5 -> "May"
-                    6 -> "June"
-                    7 -> "July"
-                    8 -> "August"
-                    9 -> "September"
-                    10 -> "October"
-                    11 -> "November"
-                    12 -> "December"
+                    1 -> MonthEnum.JANUARY.month
+                    2 -> MonthEnum.FEBRUARY.month
+                    3 -> MonthEnum.MARCH.month
+                    4 -> MonthEnum.APRIL.month
+                    5 -> MonthEnum.MAY.month
+                    6 -> MonthEnum.JUNE.month
+                    7 -> MonthEnum.JULY.month
+                    8 -> MonthEnum.AUGUST.month
+                    9 -> MonthEnum.SEPTEMBER.month
+                    10 -> MonthEnum.OCTOBER.month
+                    11 -> MonthEnum.NOVEMBER.month
+                    12 -> MonthEnum.DECEMBER.month
                     else -> ""
                 }
                 val days = mutableListOf<DayData>()
